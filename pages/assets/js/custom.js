@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('#txt_noHP').val(localStorage.getItem('user_aktif'));	
 	//console.log('sessionStorage '+sessionStorage.getItem('wa_aduan_center')+","+sessionStorage.getItem('wa_aduan_center_login'))
-    if (sessionStorage.getItem('wa_aduan_center')==0 || sessionStorage.getItem('wa_aduan_center_login')==0||)sessionStorage.getItem('wa_aduan_center')==undefined||sessionStorage.getItem('wa_aduan_center_login')==undefined){
+    if (sessionStorage.getItem('wa_aduan_center')==0 || sessionStorage.getItem('wa_aduan_center_login')==0|| sessionStorage.getItem('wa_aduan_center')==undefined||sessionStorage.getItem('wa_aduan_center_login')==undefined){
 		location.href = "/pages/sign-in.html";
 	} else {
 		sessionStorage.setItem('wa_aduan_center_login',1)
