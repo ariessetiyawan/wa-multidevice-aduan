@@ -10,10 +10,6 @@ import path  from 'path'
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 const __filename = url.fileURLToPath(import.meta.url)
 
-
-console.log(__filename);
-console.log(__dirname);
-
 const router = Router()
 
 router.get('/', (req, res) => {

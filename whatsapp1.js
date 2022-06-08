@@ -46,9 +46,8 @@ const shouldReconnect = (sessionId) => {
 
     return false
 }
-
 const createSessionP = async (sessionId, isLegacy = false, res = null) => {
-    const sessionFile = (isLegacy ? 'legacy_' : 'md_') + sessionId
+	const sessionFile = (isLegacy ? 'legacy_' : 'md_') + sessionId
 
     const logger = pino({ level: 'warn' })
     const store = makeInMemoryStore({ logger })
@@ -115,7 +114,7 @@ const createSessionP = async (sessionId, isLegacy = false, res = null) => {
         if (connection === 'close') {
             if (statusCode === DisconnectReason.loggedOut || !shouldReconnect(sessionId)) {
                 if (res && !res.headersSent) {
-                   // response(res, 500, false, 'Unable to create session.')
+                    response(res, 500, false, 'Unable to create session.')
                 }
 
                 deleteSession(sessionId, isLegacy)
@@ -133,33 +132,16 @@ const createSessionP = async (sessionId, isLegacy = false, res = null) => {
             if (res && !res.headersSent) {
                 try {
                     const qr = await toDataURL(update.qr)
-					socketwa.emit("log","res kirim qrcode base64")
 					socketwa.emit("qr",qr)
-                    //response(res, 200, true, 'QR code received, please scan the QR code.', { qr })
-					
                     
-                } catch(e) {
-					console.log(`emit res ${e}`)
-                    //response(res, 500, false, 'Unable to create QR code.')
+                } catch {
+                    response(res, 500, false, 'Unable to create QR code.')
                 }
-            } else {
-				try {
-                    const qr = await toDataURL(update.qr)
-					//console.log(qr)
-					socketwa.emit("log","kirim qrcode base64")
-					socketwa.emit("qr",qr)
-                    //response(res, 200, true, 'QR code received, please scan the QR code.', { qr })
-
-                    
-                } catch(e) {
-					console.log(`emit ${e}`)
-                    //response(res, 500, false, 'Unable to create QR code.')
-                }
-			}
+            }
 
             try {
                 await wa.logout()
-            } catch (e) {
+            } catch {
             } finally {
                 deleteSession(sessionId, isLegacy)
             }
@@ -226,11 +208,9 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
     wa.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update
         const statusCode = lastDisconnect?.error?.output?.statusCode
-		//console.log(`statusCode ${statusCode}`)
+
         if (connection === 'open') {
             retries.delete(sessionId)
-			console.log('connection',connection)
-			socketwa.emit('statusscan',true)
         }
 
         if (connection === 'close') {
@@ -253,17 +233,15 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
         if (update.qr) {
             if (res && !res.headersSent) {
                 try {
-                    
-					const qr = await toDataURL(update.qr)
-					await socketwa.emit("log","res kirim qrcode base64")
-					await socketwa.emit("qr",qr)
+                    const qr = await toDataURL(update.qr)
+
                     response(res, 200, true, 'QR code received, please scan the QR code.', { qr })
 
                     return
                 } catch {
                     response(res, 500, false, 'Unable to create QR code.')
                 }
-            } 
+            }
 
             try {
                 await wa.logout()
@@ -271,11 +249,8 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
             } finally {
                 deleteSession(sessionId, isLegacy)
             }
-			
-			
         }
     })
-	//console.log('wa.state',wa.state)
 }
 
 /**
@@ -404,7 +379,6 @@ const init = () => {
 export {
     isSessionExists,
     createSession,
-	createSessionP,
     getSession,
     deleteSession,
     getChatList,
@@ -414,4 +388,5 @@ export {
     formatGroup,
     cleanup,
     init,
+	createSessionP,
 }

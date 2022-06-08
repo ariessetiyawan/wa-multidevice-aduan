@@ -13,7 +13,6 @@ const __filename = url.fileURLToPath(import.meta.url)
 
 const router = Router()
 router.use(express.static(path.join(__dirname, '/pages')));
-//router.use('/pages', Router.static(__dirname + "/pages"))
 router.use('/',pagesRoute)
 router.use('/sessions', sessionsRoute)
 router.use('/chats', chatsRoute)

@@ -24,11 +24,17 @@
     "@adiwajshing/keyed-db": "^0.2.4",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
+    "express-session": "^1.17.3",
     "express-validator": "^6.14.0",
+    "moment-timezone": "^0.5.34",
     "node-cleanup": "^2.1.2",
+    "node-cron": "^3.0.1",
     "pino": "^7.10.0",
     "qrcode": "^1.5.0",
-    "qrcode-terminal": "^0.12.0"
+    "qrcode-terminal": "^0.12.0",
+    "socket.io": "^4.5.1",
+    "timezone": "^1.0.23",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "^8.5.0",
