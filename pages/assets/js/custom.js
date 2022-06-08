@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$('#txt_noHP').val(localStorage.getItem('user_aktif'));	
 	//console.log('sessionStorage '+sessionStorage.getItem('wa_aduan_center')+","+sessionStorage.getItem('wa_aduan_center_login'))
-    if (sessionStorage.getItem('wa_aduan_center')==0 || sessionStorage.getItem('wa_aduan_center_login')==0){
+    if (sessionStorage.getItem('wa_aduan_center')==0 || sessionStorage.getItem('wa_aduan_center_login')==0||)sessionStorage.getItem('wa_aduan_center')==undefined||sessionStorage.getItem('wa_aduan_center_login')==undefined){
 		location.href = "/pages/sign-in.html";
 	} else {
 		sessionStorage.setItem('wa_aduan_center_login',1)
@@ -42,7 +42,7 @@ $(document).on("click","#hapus_device", function(){
 	if (kode !==''){
 		const qrcode = document.getElementById("qrcode")
 		$.ajax({
-			url:`http://localhost:8001/sessions/delete/${kode}`,
+			url:`/sessions/delete/${kode}`,
 			method:'DELETE',
 			success:function(e){
 				if (!e.success){
@@ -140,7 +140,7 @@ $(document).on("click","#cmd_qrcode", function(){
 		qrcode.setAttribute("src", "./assets/img/loader.gif")
 		qrcode.setAttribute("alt", "mohon ditunggu !")
 		$.ajax({
-			url:'http://localhost:8001/sessions/add',
+			url:'/sessions/add',
 			type:'POST',
 			data:data,
 			success:function(e){
