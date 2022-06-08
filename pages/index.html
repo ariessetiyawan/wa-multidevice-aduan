@@ -52,7 +52,7 @@
 			const socket = io()
 			socket.on("qr", src => {
 				const qrcode = document.getElementById("qrcode")
-				console.log(src)
+				//console.log(src)
 				qrcode.setAttribute("src", src)
 				qrcode.setAttribute("alt", "qrcode")
 			})
@@ -61,7 +61,7 @@
 				socket.emit("setting_form",frms)
 			})
 			socket.on("statusscan", src => {
-				console.log(src)
+				//console.log(src)
 				const qrcode = document.getElementById("qrcode")
 				qrcode.setAttribute("width", "80%")
 				qrcode.setAttribute("src", "./assets/img/check.svg")
@@ -71,10 +71,10 @@
 				qrcode.setAttribute("alt", "loading")
 			})
 			socket.on("log", log => {
-				console.log(log)
+				//console.log(log)
 			})	
 			socket.on("time", log => {
-				console.log(log)
+				//console.log(log)
 			})
 		</script>
 

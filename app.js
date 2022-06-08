@@ -25,11 +25,11 @@ io.on('connection', (socket) => {
 	io.emit('info_setting');   
 	socket.on('disconnect', () => console.log('Client disconnected'));
     socket.on('message', (message) =>     {
-        console.log(message);
+        //console.log(message);
         io.emit('message', `${socket.id.substr(0,2)} said ${message}` );   
     });
 	socket.on('setting_form', (message) =>     {
-        console.log(message);
+        //console.log(message);
         //io.emit('message', `${socket.id.substr(0,2)} said ${message}` );   
 		IDGAS=message['IDGAS']
 		sessionA=message['sessionid']
@@ -54,7 +54,7 @@ app.use(express.json())
 app.use('/', routes)
 
 const kirimWA = cron.schedule(
-	"*/1 * * * *",
+	"*/180 * * * *",
 	async () => {	
 		try{
 			var url=`https://script.google.com/macros/s/${IDGAS}/exec?aksi=0`

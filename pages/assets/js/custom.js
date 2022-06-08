@@ -80,7 +80,7 @@ $(document).on("click","#bt_save_pesan", function(){
 	sip=parseInt(sip)
 	sip="62"+sip.toString()
 	var pesanx=$('#txts_isipesan').val()
-	pesanx=pesanx.replace('\n',"%0a %0a")
+	//pesanx=pesanx.replace('\n',"%0a %0a")
 
 	var isipesanx=	{"receiver": sip, 
 						"message": {
