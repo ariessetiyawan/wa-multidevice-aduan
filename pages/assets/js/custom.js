@@ -1,6 +1,4 @@
 $(document).ready(function() {
-	document.getElementById("styled"). style. background = "black" 
-	document.getElementById("styled"). style. font= "white" 
 	$('#txt_noHP').val(localStorage.getItem('user_aktif'));	
 	//console.log('sessionStorage '+sessionStorage.getItem('wa_aduan_center')+","+sessionStorage.getItem('wa_aduan_center_login'))
     if (sessionStorage.getItem('wa_aduan_center')==0 || sessionStorage.getItem('wa_aduan_center_login')==0){
