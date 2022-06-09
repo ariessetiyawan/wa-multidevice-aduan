@@ -11,6 +11,7 @@ import session from 'express-session';
 import cron	 from 'node-cron';
 import moment from "moment-timezone";
 import axios from "axios";
+
 let IDGAS='';
 let sessionA='';
 
@@ -84,6 +85,11 @@ const kirimWA = cron.schedule(
 						  let url=`https://script.google.com/macros/s/${IDGAS}/exec?aksi=2&kdkua=${kua}`;	
 						  let ssid=getSession(sessionA)
 						  if (sta==0){
+								const templateButtons = [
+									  {index: 1, urlButton: {displayText: '⭐ IKM KUA!', url: 'https://github.com/adiwajshing/Baileys'}},
+									  {index: 2, callButton: {displayText: 'Call me!', phoneNumber: '+1 (234) 5678-901'}},
+									  {index: 3, quickReplyButton: {displayText: 'This is a reply, just like normal buttons!', id: 'id-like-buttons-message'}},
+									]
 								let message=`🙏 Bapak/Ibu/Sdr. *${namal}*,\n\nPengaduan anda telah kami terima dengan nomor resi *${ida}*, segera akan kami tidak lanjuti.\n\nTerima kasih\n\n*Biro Hukum*\n*Asosiasi Penghulu RI*`
 								//sock.sendMessage(`${notelp}@s.whatsapp.net`, { text: message });
 								sendMessage(ssid,`${notelp}@s.whatsapp.net`, { text: message,footer:"createby ariessda" });
@@ -94,7 +100,13 @@ const kirimWA = cron.schedule(
 										let nokua=arr[0]['NO TELP']
 										nokua='62'+parseInt(nokua).toString();
 										let balasaduan=`🗣 KUA *${kua}* mendapat pengaduan dari masyarakat perihal *${hal}*, dengan detail: *${detail}*\n\nTerima kasih\n\n*Biro Hukum*\n*Asosiasi Penghulu RI*`;
-										sendMessage(ssid,`${nokua}@s.whatsapp.net`, { text: balasaduan,footer:"createby ariessda" });
+										sendMessage(ssid,`${nokua}@s.whatsapp.net`, { 
+											caption: balasaduan,
+											footer:"createby ariessda",
+											templateButtons: templateButtons,
+											image: {url: './pages/assets/img/logos/visa.png'}
+											
+										});
 
 									}
 									let urlupd =`https://script.google.com/macros/s/${IDGAS}/exec?aksi=1&id=${ida}`;

@@ -82,6 +82,8 @@ const createSessionP = async (sessionId, isLegacy = false, res = null) => {
     wa.ev.on('creds.update', saveState)
 
     wa.ev.on('chats.set', ({ chats }) => {
+		//console.log('got chats', store.chats.all())
+		//console.log(chats)
         if (isLegacy) {
             store.chats.insertIfAbsent(...chats)
         }
@@ -118,7 +120,7 @@ const createSessionP = async (sessionId, isLegacy = false, res = null) => {
                    // response(res, 500, false, 'Unable to create session.')
                 }
 
-                deleteSession(sessionId, isLegacy)
+                //deleteSession(sessionId, isLegacy)
             }
 
             setTimeout(
@@ -170,8 +172,9 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
     const sessionFile = (isLegacy ? 'legacy_' : 'md_') + sessionId
 
     const logger = pino({ level: 'warn' })
+	
     const store = makeInMemoryStore({ logger })
-
+	
     const { state, saveState } = isLegacy
         ? useSingleFileLegacyAuthState(sessionsDir(sessionFile))
         : useSingleFileAuthState(sessionsDir(sessionFile))
@@ -195,22 +198,35 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
         store.readFromFile(sessionsDir(`${sessionId}_store`))
         store.bind(wa.ev)
     }
-
+	setInterval(() => {
+		store.writeToFile(`${sessionId}_store`)
+	}, 10_000)
+	
     sessions.set(sessionId, { ...wa, store, isLegacy })
 
     wa.ev.on('creds.update', saveState)
-
-    wa.ev.on('chats.set', ({ chats }) => {
+		
+    wa.ev.on('chats.set', async  ({ chats }) => {
+		
         if (isLegacy) {
             store.chats.insertIfAbsent(...chats)
         }
     })
 
     // Automatically read incoming messages, uncomment below codes to enable this behaviour
-    /*
+
     wa.ev.on('messages.upsert', async (m) => {
         const message = m.messages[0]
-
+		////console.log(message.key.remoteJid)
+		
+		//console.log(getSession(sessionId).store.chats.get(message.key.remoteJid))
+		//const lastMsgInChat = await getLastMessageInChat(message.key.remoteJid) // implement this on your end
+		//console.log(lastMsgInChat)
+		//await sock.chatModify({ archive: true, lastMessages: [lastMsgInChat] },message.key.remoteJid)
+		getSession(sessionId).store.chats.filter((chat) => {
+			//console.log( chat)
+		})
+		
         if (!message.key.fromMe && m.type === 'notify') {
             await delay(1000)
 
@@ -221,8 +237,8 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
             }
         }
     })
-    */
-
+    wa.ev.on('messages.update', m => console.log(JSON.stringify(m, undefined, 2)))
+	wa.ev.on('chats.update', m => console.log(m))
     wa.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update
         const statusCode = lastDisconnect?.error?.output?.statusCode

@@ -36,6 +36,8 @@
 <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
 
 <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+<script src="../assets/js/core/jquery-3.1.1.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
 <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
 
 <link id="pagestyle" href="../assets/css/soft-ui-dashboard.min.css?v=1.0.6" rel="stylesheet" />
@@ -395,7 +397,7 @@
 									<label for="txt_noHP">Nomor HP</label>
 									<input type="text" class="form-control" id="txt_noHP" placeholder="contoh : 6281xxxxx" width="80%">
 									  <div class="input-group-append">
-										<button class="btn btn-outline-secondary" type="button" id="hapus_device">Hapus</button>
+										<button class="btn btn-primary" type="button" id="hapus_device1" data-toggle="modal" data-target="#delssMDL" >Hapus</button>
 									  </div>
 								  </div>
 								   <div class="form-group">
@@ -868,12 +870,16 @@
 		<div class="modal-content">
 		  <div class="modal-header">
 			<h5 class="modal-title" id="exampleModalLabel">Setting WA Center</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
 		  </div>
 		  <div class="modal-body">
-			<form>
+			<form id="frmSetting">
+			  <div class="form-group">
+				<label for="txts_session" class="col-form-label">Session No:</label>
+				<input type="text" class="form-control" id="txts_session" name="txts_session">
+			  </div>
 			  <div class="form-group">
 				<label for="txts_IDGAS" class="col-form-label">ID GAS:</label>
 				<input type="text" class="form-control" id="txts_IDGAS">
@@ -889,18 +895,18 @@
 			</form>
 		  </div>
 		  <div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal" id="bt_close_setting">Close</button>
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="bt_close_setting">Close</button>
 			<button type="button" class="btn btn-primary" id="bt_save_setting">Save</button>
 		  </div>
 		</div>
 	  </div>
 	</div>
-<div class="modal fade" id="pesanMdl" tabindex="-1" role="dialog" aria-labelledby="pesanMdl" aria-hidden="true">
+<div class="modal" id="pesanMdl" tabindex="-1" role="dialog" aria-labelledby="pesanMdl" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 		<div class="modal-content">
 		  <div class="modal-header">
 			<h5 class="modal-title" id="exampleModalLabel">Kirim Pesan</h5>
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
 		  </div>
@@ -921,20 +927,41 @@
 			</form>
 		  </div>
 		  <div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-dismiss="modal" id="bt_close_pesan">Close</button>
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="bt_close_pesan">Close</button>
 			<button type="button" class="btn btn-primary" id="bt_save_pesan">Kirim</button>
 		  </div>
 		</div>
 	  </div>
 	</div>
+<!-- Modal -->
+<div class="modal" id="delssMDL" tabindex="-1" role="dialog" aria-labelledby="delssMDL" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Apakah akan menghapus session HP ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="hapus_device">Hapus Session</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="../assets/js/core/popper.min.js"></script>
-<script src="../assets/js/core/bootstrap.min.js"></script>
+
 <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
 <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
-<script src="../assets/js/core/jquery-3.1.1.min.js"></script>
+
 <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.6"></script>
 
 <script src="../assets/js/custom.js"></script>
 </body>
+
 </html>

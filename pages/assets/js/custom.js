@@ -28,7 +28,9 @@ $(document).on("click",".bt_logout", function(){
 	sessionStorage.setItem('wa_aduan_center_expired',0)
 	location.href="/pages/sign-in.html"
 })
-
+$(document).on("click","#hapus_device1", function(){
+	$('#delssMDL').modal('show');
+})
 $(document).on("click","#hapus_device", function(){
 	localStorage.setItem('wacenter_IDGAS',$('#txts_IDGAS').val())
 	localStorage.setItem('wacenter_IDSHEET',$('#txts_IDSHEET').val())
@@ -69,6 +71,8 @@ $(document).on("click","#hapus_device", function(){
 })
 $(document).on("click","#mnuL_frmpesan", function(){
 	$('#txts_session').val($('#txt_noHP').val())
+	$('#txts_to').val('')
+	$('#txts_isipesan').val('')
 	$('#pesanMdl').modal('toggle');
 })
 $(document).on("click","#bt_close_pesan", function(){
@@ -81,15 +85,57 @@ $(document).on("click","#bt_save_pesan", function(){
 	sip="62"+sip.toString()
 	var pesanx=$('#txts_isipesan').val()
 	//pesanx=pesanx.replace('\n',"%0a %0a")
+	const templateButtons = [
+	  {index: 1, urlButton: {displayText: '⭐ Star Baileys on GitHub!', url: 'https://github.com/adiwajshing/Baileys'}},
+	  {index: 2, callButton: {displayText: 'Call me!', phoneNumber: '+1 (234) 5678-901'}},
+	  {index: 3, quickReplyButton: {displayText: 'This is a reply, just like normal buttons!', id: 'id-like-buttons-message'}},
+	]
+	const buttonsMD = [
+	   { 
+		  index: 0, 
+		  urlButton: {
+			  url: 'https://github.com/jrCleber/exemples-baileys',
+			 displayText: '⭐ IKM KUA ⭐',
+		  }
+	   },
+	  /* {
+		  index: 1,
+		  callButton: { displayText: 'Call me 📱', phoneNumber: '+55 31 0 0000-000', }
+	   },
+	   {
+		  index: 2,
+		  quickReplyButton: { id: 'id1', displayText: 'ReplyBtn1' }
+	   },
+	   {
+		  index: 3,
+		  quickReplyButton: { id: 'id2', displayText: 'ReplyBtn2' }
+	   }*/
+	]
+	var isipesanx=	{receiver: sip, 
+						message: {
+							caption: pesanx,
+							footer: "createby ariessda",
+							templateButtons: buttonsMD,
+							image: {url: './pages/assets/img/logos/visa.png'}
+						}
+				}
+	
+	const buttons = [
+	  {buttonId: 'id1', buttonText: {displayText: 'Button 1'}, type: 1},
+	  {buttonId: 'id2', buttonText: {displayText: 'Button 2'}, type: 0},
+	  {buttonId: 'id3', buttonText: {displayText: 'Button 3'}, type: 0}
+	]
 
-	var isipesanx=	{"receiver": sip, 
-						"message": {
-							"text": pesanx,
-							"footer": "createby ariessda"
+	var isipesanx1={receiver: sip, 
+						message: {caption: pesanx,
+								  footer: "nice footer, link: https://google.com",
+								  image: {url: './pages/assets/img/logos/visa.png'},
+								  buttons: buttons,
+								  headerType: 2
 						}
 				}
 	//var data={"receiver":sip,"message":isipesanx}
-	console.log(isipesanx)
+	//console.log(isipesanx)
 	var idss=$('#txt_noHP').val()
 	$.ajax({
 		url:'/chats/send?id='+(idss),
@@ -116,6 +162,7 @@ $(document).on("click","#mnuL_gsheet", function(){
 	window.open(url)
 })
 $(document).on("click","#mnuL_setting", function(){
+	$('#txts_session').val(localStorage.getItem('user_aktif'))
 	$('#txts_IDGAS').val(localStorage.getItem('wacenter_IDGAS'))
 	$('#txts_IDSHEET').val(localStorage.getItem('wacenter_IDSHEET'))
 	$('#txts_urladuan').val(localStorage.getItem('wacenter_urladuan'))
@@ -125,12 +172,26 @@ $(document).on("click","#bt_close_setting", function(){
 	$('#settingMdl').modal('hide')
 })
 $(document).on("click","#bt_save_setting", function(){
-	localStorage.setItem('wacenter_IDGAS',$('#txts_IDGAS').val())
-	localStorage.setItem('wacenter_IDSHEET',$('#txts_IDSHEET').val())
-	localStorage.setItem('wacenter_urladuan',$('#txts_urladuan').val())
-	var frms={"sessionid":localStorage.getItem('user_aktif'),"IDGAS":$('#txts_IDGAS').val(),"IDSHEET":$('#txts_IDSHEET').val()}
-	socket.emit("setting_form",frms)
-	$('#settingMdl').modal('hide')
+	var data={}
+	$.ajax({
+		url:"",
+		method:"POST",
+		data:data,
+		success:function(e){
+			if (e.success){
+				localStorage.setItem('wacenter_IDGAS',$('#txts_IDGAS').val())
+				localStorage.setItem('wacenter_IDSHEET',$('#txts_IDSHEET').val())
+				localStorage.setItem('wacenter_urladuan',$('#txts_urladuan').val())
+				var frms={"sessionid":localStorage.getItem('user_aktif'),"IDGAS":$('#txts_IDGAS').val(),"IDSHEET":$('#txts_IDSHEET').val()}
+				socket.emit("setting_form",frms)
+				$('#settingMdl').modal('hide')
+			} else {
+				alert(e.message)
+			}
+		},
+		error:function(e){}
+	})
+	
 })
 $(document).on("click","#cmd_qrcode", function(){
 	var kode=$('#txt_noHP').val();
