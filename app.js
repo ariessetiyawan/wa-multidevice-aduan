@@ -136,7 +136,7 @@ const kirimWA = cron.schedule(
 
 httpServer.listen(port, host, () => {
     init()
-	kirimWA.start();
+	//kirimWA.start();
     console.log(`Server is listening on http://${host}:${port}`)
 })
 
