@@ -57,7 +57,7 @@ app.use(express.json())
 app.use('/', routes)
 
 const kirimWA = cron.schedule(
-	"*/13 * * * *",
+	"* */1 * * *",
 	async () => {	
 		try{
 			IDGAS=process.env.IDGAS

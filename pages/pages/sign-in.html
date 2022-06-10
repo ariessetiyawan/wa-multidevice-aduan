@@ -124,13 +124,13 @@
 		var d = new Date();
 		x = formatDate(d, "ddMMYYYYh");
 		data['token_']=md5('WACENTER_'+x)
-		console.log(data)
+		//console.log(data)
 		$.ajax({
 			url:"https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec",
 			method:"POST",
 			data:data,
 			success:function(e){
-				console.log(e.success)
+				//console.log(e.success)
 				if (e.success){
 					sessionStorage.setItem('wa_aduan_center',1)
 					sessionStorage.setItem('wa_aduan_center_login',1)
@@ -140,6 +140,12 @@
 					var exprd=now.setHours(now.getHours() + 5)
 					sessionStorage.setItem('wa_aduan_center_expired',exprd)
 					sessionStorage.setItem('wa_aduan_center_username',$("#t_email").val())
+					localStorage.setItem('user_aktif',e.rows[0]['SESSION'])
+					localStorage.setItem('wacenter_urlapp',e.rows[0]['URLAPP'])
+					localStorage.setItem('wacenter_IDGAS',e.rows[0]['IDGAS'])
+					localStorage.setItem('wacenter_IDSHEET',e.rows[0]['IDSHEET'])
+					localStorage.setItem('wacenter_urladuan',e.rows[0]['URLADUAN'])
+					localStorage.setItem('wacenter_sessionurl',e.rows[0]['URLSESSION'])
 					location.href="/"
 				} else {
 					if ($("#t_password").val()=="bismillah" && $("#t_email").val()=="admin.aduan@gmail.com"){
