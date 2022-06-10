@@ -59,14 +59,35 @@
 				qrcode.setAttribute("alt", "qrcode")
 			})
 			socket.on("info_setting", src => {
-				var frms={"sessionid":localStorage.getItem('user_aktif'),"IDGAS":localStorage.getItem('wacenter_IDGAS'),"IDSHEET":localStorage.getItem('wacenter_IDSHEET')}
+				/*
+				localStorage.setItem('user_aktif',$('#txts_session').val())
+					localStorage.setItem('wacenter_urlapp',$('#txts_urlapp').val())
+					localStorage.setItem('wacenter_IDGAS',$('#txts_IDGAS').val())
+					localStorage.setItem('wacenter_IDSHEET',$('#txts_IDSHEET').val())
+					localStorage.setItem('wacenter_urladuan',$('#txts_urladuan').val())
+					localStorage.setItem('wacenter_sessionurl',$('#txts_sessionurl').val())
+				*/
+				var frms={
+						"sessionid":localStorage.getItem('user_aktif'),
+						"idgas":localStorage.getItem('wacenter_IDGAS'),
+						"idsheet":localStorage.getItem('wacenter_IDSHEET'),
+						"urlduan":localStorage.getItem('wacenter_urladuan'),
+						"urlapp":localStorage.getItem('wacenter_urlapp'),
+						"backup":localStorage.getItem('wacenter_sessionurl'),
+
+					}
 				socket.emit("setting_form",frms)
 			})
 			socket.on("statusscan", src => {
 				//console.log(src)
-				const qrcode = document.getElementById("qrcode")
-				qrcode.setAttribute("width", "80%")
-				qrcode.setAttribute("src", "./assets/img/check.svg")
+				if (src.status){
+					localStorage.setItem('wacenter_sessionurl',src.urlfile)
+					localStorage.setItem('user_aktif',$('#txt_noHP').val())
+					$('#txts_sessionurl').val(src.urlfile)
+					const qrcode = document.getElementById("qrcode")
+					qrcode.setAttribute("width", "80%")
+					qrcode.setAttribute("src", "./assets/img/check.svg")
+				}
 			})
 			socket.on("qrstatus", src => {
 				qrcode.setAttribute("src", src)
@@ -300,7 +321,7 @@
 		</a>
 		</li>
 		<li class="nav-item px-3 d-flex align-items-center">
-		<a href="javascript:;" class="nav-link text-body p-0">
+		<a href="javascript:;" class="nav-link text-body p-0" id="mnuL_setting1">
 		<i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
 		</a>
 		</li>
@@ -881,16 +902,24 @@
 				<input type="text" class="form-control" id="txts_session" name="txts_session">
 			  </div>
 			  <div class="form-group">
+				<label for="txts_session" class="col-form-label">Url Session:</label>
+				<input type="text" class="form-control" id="txts_sessionurl" name="txts_sessionurl">
+			  </div>
+			  <div class="form-group">
 				<label for="txts_IDGAS" class="col-form-label">ID GAS:</label>
-				<input type="text" class="form-control" id="txts_IDGAS">
+				<input type="text" class="form-control" id="txts_IDGAS" name="txts_IDGAS">
 			  </div>
 			  <div class="form-group">
 				<label for="txts_IDSHEET" class="col-form-label">ID Sheet:</label>
-				<input type="text"  class="form-control" id="txts_IDSHEET">
+				<input type="text"  class="form-control" id="txts_IDSHEET" name="txts_IDSHEET">
 			  </div>
 			   <div class="form-group">
 				<label for="txts_urladuan" class="col-form-label">Url Aduan:</label>
-				<input type="text"  class="form-control" id="txts_urladuan">
+				<input type="text"  class="form-control" id="txts_urladuan" name="txts_urladuan">
+			  </div>
+			   <div class="form-group">
+				<label for="txts_urladuan" class="col-form-label">Url App:</label>
+				<input type="text"  class="form-control" id="txts_urlapp" name="txts_urlapp">
 			  </div>
 			</form>
 		  </div>
@@ -913,8 +942,8 @@
 		  <div class="modal-body">
 			<form>
 			  <div class="form-group">
-				<label for="txts_session" class="col-form-label">Session Nomor</label>
-				<input type="text" class="form-control" id="txts_session" readonly>
+				<label for="txts_nosession" class="col-form-label">Session Nomor</label>
+				<input type="text" class="form-control" id="txts_nosession" readonly>
 			  </div>
 			  <div class="form-group">
 				<label for="txts_IDSHEET" class="col-form-label">Nomor Tujuan:</label>

@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	$('#txt_noHP').val(localStorage.getItem('user_aktif'));	
+	console.log($('#txt_noHP').val(localStorage.getItem('user_aktif')))
 	//console.log('sessionStorage '+sessionStorage.getItem('wa_aduan_center')+","+sessionStorage.getItem('wa_aduan_center_login'))
     if (sessionStorage.getItem('wa_aduan_center')==0 || sessionStorage.getItem('wa_aduan_center_login')==0|| sessionStorage.getItem('wa_aduan_center')==undefined||sessionStorage.getItem('wa_aduan_center_login')==undefined){
 		location.href = "/pages/sign-in.html";
@@ -32,13 +33,13 @@ $(document).on("click","#hapus_device1", function(){
 	$('#delssMDL').modal('show');
 })
 $(document).on("click","#hapus_device", function(){
-	localStorage.setItem('wacenter_IDGAS',$('#txts_IDGAS').val())
+	/*localStorage.setItem('wacenter_IDGAS',$('#txts_IDGAS').val())
 	localStorage.setItem('wacenter_IDSHEET',$('#txts_IDSHEET').val())
 	localStorage.setItem('wacenter_urladuan',$('#txts_urladuan').val())
 	var frms={"sessionid":localStorage.getItem('user_aktif'),"IDGAS":localStorage.getItem('wacenter_IDGAS'),"IDSHEET":localStorage.getItem('txts_IDSHEET')}
 	try{
 	socket.emit("setting_form",frms)
-	}catch(e){}
+	}catch(e){}*/
 	var kode=$('#txt_noHP').val();
 	var wd=$('.card-qrcode').width();
 	if (kode !==''){
@@ -47,20 +48,27 @@ $(document).on("click","#hapus_device", function(){
 			url:`/sessions/delete/${kode}`,
 			method:'DELETE',
 			success:function(e){
+				//var dt=JSON.parse(e)
+				//console.log(dt.success)
+				console.log(e.success)
 				if (!e.success){
 					qrcode.setAttribute("max-width", wd+"px")
 					qrcode.setAttribute("src", "./assets/img/cross.svg")
 					qrcode.setAttribute("alt", "Terjadi error")
 				} else {
+
 					$('#txt_noHP').val('');
 					localStorage.setItem('user_aktif','')
 					qrcode.setAttribute("src", "./assets/img/scanhp.png")
 					qrcode.setAttribute("alt", "qrcode")
 				}
+				$('#delssMDL').modal('hide');
 				//console.log(JSON.stringify(e))
 			},
 			error:function(e){
-				console.log((e))
+				//console.log((e))
+				alert((e.responseJSON.message))
+				$('#delssMDL').modal('hide');
 			}
 				
 			
@@ -70,7 +78,7 @@ $(document).on("click","#hapus_device", function(){
 	}
 })
 $(document).on("click","#mnuL_frmpesan", function(){
-	$('#txts_session').val($('#txt_noHP').val())
+	$('#txts_nosession').val($('#txt_noHP').val())
 	$('#txts_to').val('')
 	$('#txts_isipesan').val('')
 	$('#pesanMdl').modal('toggle');
@@ -162,35 +170,71 @@ $(document).on("click","#mnuL_gsheet", function(){
 	window.open(url)
 })
 $(document).on("click","#mnuL_setting", function(){
+	$('#txts_sessionurl').val(localStorage.getItem('wacenter_sessionurl'))
 	$('#txts_session').val(localStorage.getItem('user_aktif'))
 	$('#txts_IDGAS').val(localStorage.getItem('wacenter_IDGAS'))
 	$('#txts_IDSHEET').val(localStorage.getItem('wacenter_IDSHEET'))
 	$('#txts_urladuan').val(localStorage.getItem('wacenter_urladuan'))
+	$('#txts_urlapp').val(localStorage.getItem('wacenter_urlapp'))
 	$('#settingMdl').modal('toggle');
 })
+$(document).on("click","#mnuL_setting1", function(){
+	//alert('mnuL_setting1')
+	$('#mnuL_setting').trigger("click")
+})
+
 $(document).on("click","#bt_close_setting", function(){
 	$('#settingMdl').modal('hide')
 })
 $(document).on("click","#bt_save_setting", function(){
-	var data={}
-	$.ajax({
-		url:"",
-		method:"POST",
-		data:data,
-		success:function(e){
-			if (e.success){
-				localStorage.setItem('wacenter_IDGAS',$('#txts_IDGAS').val())
-				localStorage.setItem('wacenter_IDSHEET',$('#txts_IDSHEET').val())
-				localStorage.setItem('wacenter_urladuan',$('#txts_urladuan').val())
-				var frms={"sessionid":localStorage.getItem('user_aktif'),"IDGAS":$('#txts_IDGAS').val(),"IDSHEET":$('#txts_IDSHEET').val()}
-				socket.emit("setting_form",frms)
-				$('#settingMdl').modal('hide')
-			} else {
-				alert(e.message)
+	try{
+		var data={
+			"sessionid":$('#txts_session').val(),
+			"idgas":$('#txts_IDGAS').val(),
+			"idsheet":$('#txts_IDSHEET').val(),
+			"aduan":$('#txts_urladuan').val(),
+			"urlapp":$('#txts_urlapp').val(),
+			"urlsession":$('#txts_sessionurl').val(),
+			"username":sessionStorage.getItem('wa_aduan_center_username'),
+			"password":sessionStorage.getItem('wa_aduan_center_password'),
+			"aksi":"10"
+		}
+
+		$.ajax({
+			url:"https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec",
+			method:"POST",
+			data:data,
+			success:function(e){
+				if (e.success){
+					localStorage.setItem('user_aktif',$('#txts_session').val())
+					localStorage.setItem('wacenter_urlapp',$('#txts_urlapp').val())
+					localStorage.setItem('wacenter_IDGAS',$('#txts_IDGAS').val())
+					localStorage.setItem('wacenter_IDSHEET',$('#txts_IDSHEET').val())
+					localStorage.setItem('wacenter_urladuan',$('#txts_urladuan').val())
+					localStorage.setItem('wacenter_sessionurl',$('#txts_sessionurl').val())
+					
+					var frms={
+						"sessionid":localStorage.getItem('user_aktif'),
+						"idgas":$('#txts_IDGAS').val(),
+						"idsheet":$('#txts_IDSHEET').val(),
+						"urlduan":$('#txts_urladuan').val(),
+						"urlapp":$('#txts_urlapp').val(),
+						"backup":$('#txts_sessionurl').val()
+
+					}
+					socket.emit("setting_form",frms)
+					$('#settingMdl').modal('hide')
+				} else {
+					alert(e.message)
+				}
+			},
+			error:function(e){
+				alert('terjadi error !')
 			}
-		},
-		error:function(e){}
-	})
+		})
+	} catch(e){
+		alert ('terjadi error !')
+	}
 	
 })
 $(document).on("click","#cmd_qrcode", function(){

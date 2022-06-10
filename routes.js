@@ -11,18 +11,13 @@ import multer from 'multer';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 const __filename = url.fileURLToPath(import.meta.url)
-const upload = multer({dest: __dirname + '/pages/uploads'});
+
 const router = Router()
 
 
 router.use(express.static(path.join(__dirname, '/pages')));
 router.use('/',pagesRoute)
-router.post('/upload', upload.single('photo'), (req, res) => {
-    if(req.file) {
-        res.json(req.file);
-    }
-    else throw 'error';
-});
+
 router.use('/sessions', sessionsRoute)
 router.use('/chats', chatsRoute)
 router.use('/groups', groupsRoute)

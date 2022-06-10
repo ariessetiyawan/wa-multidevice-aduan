@@ -4,7 +4,7 @@ import 'dotenv/config'
 import express from 'express'
 import nodeCleanup from 'node-cleanup'
 import routes from './routes.js'
-import { init, cleanup,isSessionExists, createSession, getSession, deleteSession,createSessionP,sendMessage } from './whatsapp.js'
+import { init,updateEnv,setEnvValue, cleanup,isSessionExists, createSession, getSession, deleteSession,createSessionP,sendMessage } from './whatsapp.js'
 import { Server } from "socket.io";
 import http from 'http';
 import session from 'express-session';
@@ -20,9 +20,10 @@ const host = process.env.HOST ?? '127.0.0.1'
 const port = parseInt(process.env.PORT ?? 8000)
 const httpServer = http.createServer(app)
 const io = new Server(httpServer, { cors: { origin: '*' } });
+IDGAS=process.env.IDGAS
 global.socketwa=io;
 io.on('connection', (socket) => {
-    console.log('a user connected');
+    //console.log('a user connected');
 	io.emit('info_setting');   
 	socket.on('disconnect', () => console.log('Client disconnected'));
     socket.on('message', (message) =>     {
@@ -32,22 +33,23 @@ io.on('connection', (socket) => {
 	socket.on('setting_form', (message) =>     {
         //console.log(message);
         //io.emit('message', `${socket.id.substr(0,2)} said ${message}` );   
-		IDGAS=message['IDGAS']
-		sessionA=message['sessionid']
+		IDGAS=message['idgas']
+		let SESSIONA=message['sessionid']
+		let IDSHEET=message['idsheet']
+		let URLADUAN=message['urlduan']
+		let URLAPP=message['urlapp']
+		let BACKSESSION=message['backup']
+		const envUpdate = {
+						'SESSIONSNAME': BACKSESSION,
+						'PHONENUMBER': SESSIONA,
+						'IDGAS':IDGAS,
+						'BACKSESSION':BACKSESSION,
+						'URLAPP':URLAPP,
+						'URLADUAN':URLADUAN,
+						'IDSHEET':IDSHEET
+					  }
+		updateEnv(envUpdate)
     });
-
-	/*
-	socket.on("createSession", () => {
-		let id='123213a';
-		io.emit('log', 'wait a moment please..' );   
-		try{
-			createSession(id, false, null);
-			console.log(hasil)
-		} catch(e){
-			console.log('error createSessionP ${e}')
-		}
-	})*/
-	//setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 });
 
 app.use(express.urlencoded({ extended: true }))
@@ -55,9 +57,10 @@ app.use(express.json())
 app.use('/', routes)
 
 const kirimWA = cron.schedule(
-	"*/180 * * * *",
+	"*/13 * * * *",
 	async () => {	
 		try{
+			IDGAS=process.env.IDGAS
 			var url=`https://script.google.com/macros/s/${IDGAS}/exec?aksi=0`
 			//console.log(url)
 		axios
@@ -130,9 +133,10 @@ const kirimWA = cron.schedule(
 		}catch(e){}
 	}
 );
-kirimWA.start();
+
 httpServer.listen(port, host, () => {
     init()
+	kirimWA.start();
     console.log(`Server is listening on http://${host}:${port}`)
 })
 

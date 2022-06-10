@@ -1,6 +1,10 @@
 import { existsSync, unlinkSync, readdir } from 'fs'
 import { join } from 'path'
 import pino from 'pino'
+import fs from 'fs'
+import os from 'os'
+import 'dotenv/config'
+import axios from 'axios'
 import makeWASocket, {
     makeWALegacySocket,
     useSingleFileAuthState,
@@ -13,6 +17,12 @@ import makeWASocket, {
 import { toDataURL } from 'qrcode'
 import __dirname from './dirname.js'
 import response from './response.js'
+import dotenv from 'dotenv'
+//import updateEnv from './updateEnv.js'
+
+const env = fs.readFileSync('.env')
+const buf = Buffer.from(env)
+const currentConfig = dotenv.parse(buf)
 
 const sessions = new Map()
 const retries = new Map()
@@ -28,7 +38,6 @@ const isSessionExists = (sessionId) => {
 const isSessionFileExists = (name) => {
     return existsSync(sessionsDir(name))
 }
-
 const shouldReconnect = (sessionId) => {
     let maxRetries = parseInt(process.env.MAX_RETRIES ?? 0)
     let attempts = retries.get(sessionId) ?? 0
@@ -46,7 +55,6 @@ const shouldReconnect = (sessionId) => {
 
     return false
 }
-
 const createSessionP = async (sessionId, isLegacy = false, res = null) => {
     const sessionFile = (isLegacy ? 'legacy_' : 'md_') + sessionId
 
@@ -65,6 +73,12 @@ const createSessionP = async (sessionId, isLegacy = false, res = null) => {
         printQRInTerminal: true,
         logger,
         browser: Browsers.ubuntu('Chrome'),
+		msgRetryCounterMap,
+		getMessage: async key => {
+			return {
+				conversation: 'hello'
+			}
+		}
     }
 
     /**
@@ -120,7 +134,7 @@ const createSessionP = async (sessionId, isLegacy = false, res = null) => {
                    // response(res, 500, false, 'Unable to create session.')
                 }
 
-                //deleteSession(sessionId, isLegacy)
+                deleteSession(sessionId, isLegacy)
             }
 
             setTimeout(
@@ -178,7 +192,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
     const { state, saveState } = isLegacy
         ? useSingleFileLegacyAuthState(sessionsDir(sessionFile))
         : useSingleFileAuthState(sessionsDir(sessionFile))
-
+	//console.log(state)
     /**
      * @type {import('@adiwajshing/baileys').CommonSocketConfig}
      */
@@ -198,9 +212,9 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
         store.readFromFile(sessionsDir(`${sessionId}_store`))
         store.bind(wa.ev)
     }
-	setInterval(() => {
+	/*setInterval(() => {
 		store.writeToFile(`${sessionId}_store`)
-	}, 10_000)
+	}, 10_000)*/
 	
     sessions.set(sessionId, { ...wa, store, isLegacy })
 
@@ -223,9 +237,6 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 		//const lastMsgInChat = await getLastMessageInChat(message.key.remoteJid) // implement this on your end
 		//console.log(lastMsgInChat)
 		//await sock.chatModify({ archive: true, lastMessages: [lastMsgInChat] },message.key.remoteJid)
-		getSession(sessionId).store.chats.filter((chat) => {
-			//console.log( chat)
-		})
 		
         if (!message.key.fromMe && m.type === 'notify') {
             await delay(1000)
@@ -237,16 +248,46 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
             }
         }
     })
-    wa.ev.on('messages.update', m => console.log(JSON.stringify(m, undefined, 2)))
-	wa.ev.on('chats.update', m => console.log(m))
+    wa.ev.on('messages.update', m => {
+		//console.log(JSON.stringify(m, undefined, 2))
+	
+	})
+	wa.ev.on('chats.update', m => {
+		
+		//console.log(m)
+ 
+	})
     wa.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update
         const statusCode = lastDisconnect?.error?.output?.statusCode
 		//console.log(`statusCode ${statusCode}`)
+		
         if (connection === 'open') {
             retries.delete(sessionId)
-			console.log('connection',connection)
-			socketwa.emit('statusscan',true)
+			//console.log('connection',connection)
+			
+			
+			let payload = new URLSearchParams({ 'aksi':'3','filename': sessionFile, 'base64': JSON.stringify(state)});
+			//let payload = new URLSearchParams({ 'aksi':'3','nm': sessionFile, 'base64': b64});
+			//console.log('payload',payload)
+			try{
+				//ke gsheet induk
+				let url='https://script.google.com/macros/s/AKfycbx_8bYVc5XDXUWxlpADzGdMsym0oITdOHEwI80TMIYz4wngwwzYUc_IbmtYneY0rC6R/exec'
+				let res = await axios.post(url, payload);
+				if (res.data.success==true){
+					//setEnvValue('SESSIONSNAME',res.data.rows.urlfile)
+					let dt =await socketwa.emit('statusscan',{'status':true,'urlfile':res.data.rows.urlfile})
+					/*console.log('res',res.data.rows.urlfile)
+					axios({
+						method: "get",
+						url: res.data.rows.urlfile,
+						responseType: "stream"
+					}).then(function (response) {
+						response.data.pipe(fs.createWriteStream(sessionsDir(sessionFile)));
+					});*/
+				}
+			} catch(e){}
+		
         }
 
         if (connection === 'close') {
@@ -254,7 +295,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
                 if (res && !res.headersSent) {
                     response(res, 500, false, 'Unable to create session.')
                 }
-
+				
                 return deleteSession(sessionId, isLegacy)
             }
 
@@ -291,7 +332,41 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 			
         }
     })
-	//console.log('wa.state',wa.state)
+	
+}
+const updateEnv=(config = {}, eol = '\n')=>{
+  console.log(config)
+  const envContents = Object.entries({...currentConfig, ...config})
+    .map(([key,val]) => `${key}=${val}`)
+    .join(eol)
+  fs.writeFileSync('.env', envContents);
+}
+const setEnvValue=(key, value)=> {
+
+    // read file from hdd & split if from a linebreak to a array
+    const ENV_VARS = fs.readFileSync("./.env", "utf8").split(os.EOL);
+
+    // find the env we want based on the key
+    const target = ENV_VARS.indexOf(ENV_VARS.find((line) => {
+        return line.match(new RegExp(key));
+    }));
+
+    // replace the key/value with the new value
+    ENV_VARS.splice(target, 1, `${key}=${value}`);
+
+    // write everything back to the file system
+    fs.writeFileSync("./.env", ENV_VARS.join(os.EOL));
+
+}
+const downloadFileSession=(ids)=>{
+	const url=process.env.SESSIONSNAME ?? 'aries.json'
+	axios({
+					method: "get",
+					url: url,//res.data.rows.urlfile,
+					responseType: "stream"
+				}).then(function (response) {
+					response.data.pipe(fs.createWriteStream(sessionsDir(sessionFile)));
+				});
 }
 
 /**
@@ -416,7 +491,10 @@ const init = () => {
         }
     })
 }
-
+const base64Encode =(file) => {
+    var body = fs.readFileSync(file);
+    return body.toString('base64');
+}
 export {
     isSessionExists,
     createSession,
@@ -424,7 +502,10 @@ export {
     getSession,
     deleteSession,
     getChatList,
+	downloadFileSession,
     isExists,
+	updateEnv,
+	setEnvValue,
     sendMessage,
     formatPhone,
     formatGroup,
