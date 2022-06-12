@@ -4,7 +4,7 @@ import 'dotenv/config'
 import express from 'express'
 import nodeCleanup from 'node-cleanup'
 import routes from './routes.js'
-import { init,updateEnv,setEnvValue, cleanup,isSessionExists, createSession, getSession, deleteSession,createSessionP,sendMessage } from './whatsapp.js'
+import { init,bacaautoresponse,updateEnv,setEnvValue, cleanup,isSessionExists, createSession, getSession, deleteSession,createSessionP,sendMessage } from './whatsapp.js'
 import { Server } from "socket.io";
 import http from 'http';
 import session from 'express-session';
@@ -14,6 +14,8 @@ import axios from "axios";
 
 let IDGAS='';
 let sessionA='';
+global.historycat=[]
+global.isiautores=[]
 
 const app = express()
 const host = process.env.HOST ?? '127.0.0.1'
@@ -133,10 +135,12 @@ const kirimWA = cron.schedule(
 		}catch(e){}
 	}
 );
-
+let dt = await bacaautoresponse()
+isiautores=dt.data.rows
 httpServer.listen(port, host, () => {
     init()
-	//kirimWA.start();
+	//const dt= bacaautoresponse()
+	//console.log((dt.data))
     console.log(`Server is listening on http://${host}:${port}`)
 })
 

@@ -238,13 +238,57 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 		//console.log(lastMsgInChat)
 		//await sock.chatModify({ archive: true, lastMessages: [lastMsgInChat] },message.key.remoteJid)
 		
+		var isipesan=''
+		  if (message.message.hasOwnProperty('extendedTextMessage')){
+			isipesan=message.message.extendedTextMessage.text
+		  } else if (message.message.hasOwnProperty('conversation')){
+			isipesan=message.message.conversation
+		  } else if (message.message.hasOwnProperty('templateButtonReplyMessage')){
+			  isipesan=(message.message.templateButtonReplyMessage.selectedId)
+		  } else if (message.message.hasOwnProperty('buttonsResponseMessage')){
+			  //console.log(message)
+			  console.log(message.message.buttonsResponseMessage.contextInfo)
+			  isipesan=(message.message.buttonsResponseMessage.selectedButtonId)
+		  } else {
+			isipesan=''
+		  }
+		
         if (!message.key.fromMe && m.type === 'notify') {
             await delay(1000)
 
             if (isLegacy) {
                 await wa.chatRead(message.key, 1)
             } else {
+				//console.log(isiautores)
+				let rta =  isiautores.filter(it => it.KEYWORD === isipesan);
+				//console.log(rta)
+				if (rta.length>0){
+					const templateButtons = [
+						//{index: 1, urlButton: {displayText: '👍 IKM KUA', url: 'https://github.com/adiwajshing/Baileys'}},
+						{index: 2, quickReplyButton: {displayText: '👍 IKM KUA', id: 'id_IKM'}},
+						{index: 1, urlButton: {displayText: '🗣 PENGADUAN KUA', url: 'https://forms.gle/BrptPEp652YxYWRb7'}},
+						{index: 3, urlButton: {displayText: '📍 REVIEW KAMI', url: 'https://g.page/KUA_JOGOROTO?gm'}},
+						//{index: 4, quickReplyButton: {displayText: 'This is a reply,\nhttps://forms.gle/BrptPEp652YxYWRb7 ', id: 'id-like-buttons-message'}},
+					]
+					let pesannya={"image":{"url":"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj-lG8aAz9wDVE7ThCr_N7XaW9CT_UbLVw0_mWwufDvPrgh_uDnhhKEjhohpixpPEDcUI0fT8XBhdM5ba1IJJ89ax5-0-ioOY07xshf5aaAfdhYVCG_oPB1QrDPCjkUeKkGunjxJIA2GGitOh2FoFQQDFyv96vMq-lWlrjeT8G7pp7fs-KQdr1aB71U/s1600/ADUAN_logo.jpg"},"caption":rta[0]['DESKRIPSI'],"footer":"Mesin Penjawab KUA","templateButtons":templateButtons}
+					historycat['nomor']=message.key.remoteJid
+					historycat['pesan']=pesannya
+					wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
+				} else {
+					if (isipesan=='id_IKM'){
+						const buttons = [
+						  {buttonId: 'id1', buttonText: {displayText: '🤩 Sangat Bagus'}, type: 1},
+						  {buttonId: 'id2', buttonText: {displayText: '😍 Bagus'}, type: 1},
+						  {buttonId: 'id3', buttonText: {displayText: '😊 Biasa saja'}, type: 1},
+						  {buttonId: 'id4', buttonText: {displayText: '😱 Kurang Bagus'}, type: 1}
+						]
+					
+						let pesannya={"image":{"url":"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj-lG8aAz9wDVE7ThCr_N7XaW9CT_UbLVw0_mWwufDvPrgh_uDnhhKEjhohpixpPEDcUI0fT8XBhdM5ba1IJJ89ax5-0-ioOY07xshf5aaAfdhYVCG_oPB1QrDPCjkUeKkGunjxJIA2GGitOh2FoFQQDFyv96vMq-lWlrjeT8G7pp7fs-KQdr1aB71U/s1600/ADUAN_logo.jpg"},"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":"Mesin Penjawab KUA","buttons":buttons}
+						wa.sendMessage(message.key.remoteJid,pesannya)
+					}
+				}
                 await wa.sendReadReceipt(message.key.remoteJid, message.key.participant, [message.key.id])
+				
             }
         }
     })
@@ -335,7 +379,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 	
 }
 const updateEnv=(config = {}, eol = '\n')=>{
-  console.log(config)
+  //console.log(config)
   const envContents = Object.entries({...currentConfig, ...config})
     .map(([key,val]) => `${key}=${val}`)
     .join(eol)
@@ -467,7 +511,13 @@ const cleanup = () => {
         }
     })
 }
-
+const bacaautoresponse = async()=>{
+	let payload=new URLSearchParams({"aksi":"GAURES"})
+	let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
+	let res = await axios.post(url,payload);
+	return res
+	//console.log(res)
+}
 const init = () => {
     readdir(sessionsDir(), (err, files) => {
         if (err) {
@@ -500,6 +550,7 @@ export {
     createSession,
 	createSessionP,
     getSession,
+	bacaautoresponse,
     deleteSession,
     getChatList,
 	downloadFileSession,
