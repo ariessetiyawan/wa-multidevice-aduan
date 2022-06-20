@@ -135,8 +135,8 @@ const kirimWA = cron.schedule(
 		}catch(e){}
 	}
 );
-let dt = await bacaautoresponse()
-isiautores=dt.data.rows
+//let dt = await bacaautoresponse()
+//isiautores=dt.data.rows
 httpServer.listen(port, host, () => {
     init()
 	//const dt= bacaautoresponse()
