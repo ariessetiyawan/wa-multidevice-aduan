@@ -247,7 +247,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 			  isipesan=(message.message.templateButtonReplyMessage.selectedId)
 		  } else if (message.message.hasOwnProperty('buttonsResponseMessage')){
 			  //console.log(message)
-			  console.log(message.message.buttonsResponseMessage.contextInfo)
+			  //console.log(message.message.buttonsResponseMessage.contextInfo)
 			  isipesan=(message.message.buttonsResponseMessage.selectedButtonId)
 		  } else {
 			isipesan=''
@@ -262,16 +262,16 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 				}
             } else {
 				//console.log(isiautores)
-				let rta =  isiautores.filter(it => it.KEYWORD === isipesan);
-				//console.log(rta)
-				if (rta.length>0){
-					const templateButtons = [
+				let rta =  isiautores.filter(it => it.KEYWORD === isipesan.toUpperCase());
+				const templateButtons = [
 						//{index: 1, urlButton: {displayText: '👍 IKM KUA', url: 'https://github.com/adiwajshing/Baileys'}},
 						{index: 2, quickReplyButton: {displayText: '👍 IKM KUA', id: 'id_IKM'}},
 						{index: 1, urlButton: {displayText: '🗣 PENGADUAN KUA', url: 'https://forms.gle/BrptPEp652YxYWRb7'}},
 						{index: 3, urlButton: {displayText: '📍 REVIEW KAMI', url: 'https://g.page/KUA_JOGOROTO?gm'}},
 						//{index: 4, quickReplyButton: {displayText: 'This is a reply,\nhttps://forms.gle/BrptPEp652YxYWRb7 ', id: 'id-like-buttons-message'}},
 					]
+				if (rta.length>0){
+					
 					let pesannya={"image":{"url":"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj-lG8aAz9wDVE7ThCr_N7XaW9CT_UbLVw0_mWwufDvPrgh_uDnhhKEjhohpixpPEDcUI0fT8XBhdM5ba1IJJ89ax5-0-ioOY07xshf5aaAfdhYVCG_oPB1QrDPCjkUeKkGunjxJIA2GGitOh2FoFQQDFyv96vMq-lWlrjeT8G7pp7fs-KQdr1aB71U/s1600/ADUAN_logo.jpg"},"caption":rta[0]['DESKRIPSI'],"footer":"Mesin Penjawab KUA","templateButtons":templateButtons}
 					historycat['nomor']=message.key.remoteJid
 					historycat['pesan']=pesannya
@@ -286,6 +286,12 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 						]
 					
 						let pesannya={"image":{"url":"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj-lG8aAz9wDVE7ThCr_N7XaW9CT_UbLVw0_mWwufDvPrgh_uDnhhKEjhohpixpPEDcUI0fT8XBhdM5ba1IJJ89ax5-0-ioOY07xshf5aaAfdhYVCG_oPB1QrDPCjkUeKkGunjxJIA2GGitOh2FoFQQDFyv96vMq-lWlrjeT8G7pp7fs-KQdr1aB71U/s1600/ADUAN_logo.jpg"},"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":"Mesin Penjawab KUA","buttons":buttons}
+						wa.sendMessage(message.key.remoteJid,pesannya)
+					} else {
+						let rta =  isiautores.filter(it => it.KEYWORD === 'INFO');
+						let pesannya={"image":{"url":"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj-lG8aAz9wDVE7ThCr_N7XaW9CT_UbLVw0_mWwufDvPrgh_uDnhhKEjhohpixpPEDcUI0fT8XBhdM5ba1IJJ89ax5-0-ioOY07xshf5aaAfdhYVCG_oPB1QrDPCjkUeKkGunjxJIA2GGitOh2FoFQQDFyv96vMq-lWlrjeT8G7pp7fs-KQdr1aB71U/s1600/ADUAN_logo.jpg"},"caption":rta[0]['DESKRIPSI'],"footer":"Mesin Penjawab KUA","templateButtons":templateButtons}
+						historycat['nomor']=message.key.remoteJid
+						historycat['pesan']=pesannya
 						wa.sendMessage(message.key.remoteJid,pesannya)
 					}
 				}
@@ -515,11 +521,11 @@ const cleanup = () => {
         }
     })
 }
-const bacaautoresponse = async()=>{
+const bacaautoresponse = async(idg)=>{
 	//try{
 		let res=[]
 		let payload=new URLSearchParams({"aksi":"GAURES"})
-		let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
+		let url='https://script.google.com/macros/s/'+idg+'/exec'
 		res = await axios.post(url,payload);
 	//} catch(error){
 		//res=[]

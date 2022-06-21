@@ -77,7 +77,18 @@ $(document).on("click","#hapus_device", function(){
 	}
 })
 $(document).on("click","#mnuL_frmpesan", function(){
+	/*$('#txt_noHP').empty()
+	var idhp=''
+	for (var i=0;i<userall.length;i++){
+		console.log(userall[i]['SESSIONA'])
+		idhp+='<option value="'+userall[i]['SESSIONA']+'">'+userall[i]['SESSIONA']+'</option>';
+	}
+	console.log(idhp)
+	$('#txt_noHP').append(idhp)
+	$('#txt_noHP').html(idhp)*/
 	$('#txts_nosession').val($('#txt_noHP').val())
+	$('#txts_nosession1').val($('#txt_noHP').val())
+	$('#txts_nosession2').val($('#txt_noHP').val())
 	$('#txts_to').val('')
 	$('#txts_isipesan').val('')
 	$('#pesanMdl').modal('toggle');
@@ -132,22 +143,28 @@ $(document).on("click","#bt_save_pesan", function(){
 	  {buttonId: 'id2', buttonText: {displayText: 'Button 2'}, type: 0},
 	  {buttonId: 'id3', buttonText: {displayText: 'Button 3'}, type: 0}
 	]
-
+	
+	if (localStorage.getItem('wacenter_urlheaderimg')==null||localStorage.getItem('wacenter_urlheaderimg')==''){
+		var urlid='1mR0Gg-qEq8MVyXxY-sfQqJsYV7pidDUB'
+	} else {
+		var urlid=localStorage.getItem('wacenter_urlheaderimg')
+	}
+	var urlimg='https://drive.google.com/uc?export=view&id='+urlid
 	var isipesanx={receiver: sip, 
 						message: {caption: pesanx,
-								  footer: "nice footer, link: https://google.com",
-								  image: {url: './pages/assets/img/logos/visa.png'},
+								  footer: localStorage.getItem('wacenter_footer'),
+								  image: {url: urlimg},
 								  buttons: buttons,
 								  headerType: 2
 						}
 				}
-	var isipesanx={"receiver":sip,"message":pesanx}
-	//console.log(isipesanx)
+	//var isipesanx={receiver: sip,message: {text: pesanx}}
+	console.log(isipesanx)
 	var idss=$('#txt_noHP').val()
 	$.ajax({
 		url:'/chats/send?id='+(idss),
 		method:'POST',
-		data:isipesanx,
+		data:(isipesanx),
 		success:function(e){
 			if (e.success){
 				localStorage.setItem('user_aktif',$('#txt_noHP').val())
@@ -175,6 +192,10 @@ $(document).on("click","#mnuL_setting", function(){
 	$('#txts_IDSHEET').val(localStorage.getItem('wacenter_IDSHEET'))
 	$('#txts_urladuan').val(localStorage.getItem('wacenter_urladuan'))
 	$('#txts_urlapp').val(localStorage.getItem('wacenter_urlapp'))
+	$('#txts_responseurl').val(localStorage.getItem('wacenter_urlresponse'))
+	$('#txts_headerimg').val(localStorage.getItem('wacenter_urlheaderimg'))
+	$('#txts_footer').val(localStorage.getItem('wacenter_footer'))
+	
 	$('#settingMdl').modal('toggle');
 })
 $(document).on("click","#mnuL_setting1", function(){
@@ -193,6 +214,10 @@ $(document).on("click","#bt_save_setting", function(){
 			"aduan":$('#txts_urladuan').val(),
 			"urlapp":$('#txts_urlapp').val(),
 			"urlsession":$('#txts_sessionurl').val(),
+			"urlresponse":$('#txts_responseurl').val(),
+			"urlheaderimg":$('#txts_headerimg').val(),
+			"autoreply":$('#txts_autoreply').val(),
+			"footertxt":$('#txts_footer').val(),
 			"username":sessionStorage.getItem('wa_aduan_center_username'),
 			"password":sessionStorage.getItem('wa_aduan_center_password'),
 			"aksi":"10"
@@ -210,15 +235,20 @@ $(document).on("click","#bt_save_setting", function(){
 					localStorage.setItem('wacenter_IDSHEET',$('#txts_IDSHEET').val())
 					localStorage.setItem('wacenter_urladuan',$('#txts_urladuan').val())
 					localStorage.setItem('wacenter_sessionurl',$('#txts_sessionurl').val())
-					
+					localStorage.setItem('wacenter_urlresponse',$('#txts_responseurl').val())
+					localStorage.setItem('wacenter_urlheaderimg',$('#txts_headerimg').val())
+					localStorage.setItem('wacenter_autoreply',$('#txts_autoreply').val())
+					localStorage.setItem('wacenter_footer',$('#txts_footer').val())
 					var frms={
 						"sessionid":localStorage.getItem('user_aktif'),
 						"idgas":$('#txts_IDGAS').val(),
 						"idsheet":$('#txts_IDSHEET').val(),
 						"urlduan":$('#txts_urladuan').val(),
 						"urlapp":$('#txts_urlapp').val(),
-						"backup":$('#txts_sessionurl').val()
-
+						"backup":$('#txts_sessionurl').val(),
+						"response":$('#txts_responseurl').val(),
+						"header":$('#txts_headerimg').val(),
+						"autoreply":$('#txts_autoreply').val(),
 					}
 					socket.emit("setting_form",frms)
 					$('#settingMdl').modal('hide')

@@ -50,13 +50,24 @@
 
 <script src="../assets/js/plugins/socket.io.min.js" crossorigin="anonymous"></script>
 		<script>
-						
+			var userall;			
 			const socket = io()
 			socket.on("qr", src => {
 				const qrcode = document.getElementById("qrcode")
 				//console.log(src)
 				qrcode.setAttribute("src", src)
 				qrcode.setAttribute("alt", "qrcode")
+			})
+			socket.on("userall", src => {
+				userall=(src)
+				/*$('#txt_noHP').empty()
+				var idhp=''
+				for (var i=0;i<src.length;i++){
+					console.log(src[i]['SESSIONA'])
+					idhp+='<option value="'+src[i]['SESSIONA']+'">'+src[i]['SESSIONA']+'</option>';
+				}
+				console.log(idhp)
+				$('#txt_noHP').append(idhp)*/
 			})
 			socket.on("info_setting", src => {
 				/*
@@ -74,6 +85,9 @@
 						"urlduan":localStorage.getItem('wacenter_urladuan'),
 						"urlapp":localStorage.getItem('wacenter_urlapp'),
 						"backup":localStorage.getItem('wacenter_sessionurl'),
+						"response":localStorage.getItem('wacenter_urlresponse'),
+						"header":localStorage.getItem('wacenter_urlheaderimg'),
+						"autoreply":localStorage.getItem('wacenter_autoreply'),
 
 					}
 				socket.emit("setting_form",frms)
@@ -921,6 +935,22 @@
 				<label for="txts_urladuan" class="col-form-label">Url App:</label>
 				<input type="text"  class="form-control" id="txts_urlapp" name="txts_urlapp">
 			  </div>
+			  <div class="form-group">
+				<label for="txts_responseurl" class="col-form-label">Url Response:</label>
+				<input type="text"  class="form-control" id="txts_responseurl" name="txts_responseurl">
+			  </div>
+			  <div class="form-group">
+				<label for="txts_headerimg" class="col-form-label">Url Header Image:</label>
+				<input type="text"  class="form-control" id="txts_headerimg" name="txts_headerimg">
+			  </div>
+			   <div class="form-group">
+				<label for="txts_footer" class="col-form-label">Text Footer:</label>
+				<input type="text"  class="form-control" id="txts_footer" name="txts_footer">
+			  </div>
+			  <div class="form-group">
+				<label for="txts_autoreply" class="col-form-label">Autoreply:</label>
+				<input type="text"  class="form-control" id="txts_autoreply" name="txts_autoreply">
+			  </div>
 			</form>
 		  </div>
 		  <div class="modal-footer">
@@ -961,19 +991,16 @@
                                             <div class="row">
                                                 <div class="col-12 col-xl-6">
                                                     <label>Device</label>
-                                                    <select class="js-states form-control" name="device" tabindex="-1" style="display: block; width: 100%">
-                                                        
-                                                            <option value=""></option>
-                                                       
-                                                    </select>
+													<input type="text" name="txts_nosession" id="txts_nosession"  class="form-control" required autocomplete="off" readonly>
+                                                    
                                                     <div class="mt-3">
                                                         <label for="">Nomor Tujuan</label>
-                                                        <input type="text" name="nomor" class="form-control" required autocomplete="off">
+                                                        <input type="text" name="txts_to" id="txts_to" class="form-control" required autocomplete="off">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-xl-6">
                                                     <div class="mt-4">
-                                                        <textarea name="pesan" class="form-control" rows="10" placeholder="Pesan" required></textarea>
+                                                        <textarea name="txts_isipesan" id="txts_isipesan" class="form-control" rows="10" placeholder="Pesan" required></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -987,11 +1014,7 @@
                                         <form action="" method="post" class="loadingbtn">
                                             <input type="hidden" name="submitby" value="pesan-media">
                                             <label>Device</label>
-                                            <select class="js-states form-control" name="device" tabindex="-1" style="display: block; width: 100%">
-                                               
-                                                    <option value=""></option>
-                                               
-                                            </select>
+                                            <input type="text" name="txts_nosession1" id="txts_nosession1"  class="form-control" required autocomplete="off" readonly>
 
                                             <div class="row">
                                                 <div class="col-12 col-xl-6">
@@ -1027,9 +1050,7 @@
                                             <div class="row">
                                                 <div class="col-12 col-xl-6">
                                                     <label>Device</label>
-                                                    <select class="js-states form-control" name="device" tabindex="-1" style="display: block; width: 100%">                                                      
-                                                            <option value=""></option>                                                    
-                                                    </select>
+                                                     <input type="text" name="txts_nosession2" id="txts_nosession2"  class="form-control" required autocomplete="off" readonly>
                                                     <div class="mt-3">
                                                         <label for="">Nomor Tujuan</label>
                                                         <input type="text" name="nomor" class="form-control" required autocomplete="off">
