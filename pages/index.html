@@ -940,20 +940,127 @@
 			</button>
 		  </div>
 		  <div class="modal-body">
-			<form>
-			  <div class="form-group">
-				<label for="txts_nosession" class="col-form-label">Session Nomor</label>
-				<input type="text" class="form-control" id="txts_nosession" readonly>
-			  </div>
-			  <div class="form-group">
-				<label for="txts_IDSHEET" class="col-form-label">Nomor Tujuan:</label>
-				<input type="text"  class="form-control" id="txts_to" placeholder="contoh: 081xxxx">
-			  </div>
-			   <div class="form-group">
-				<label for="txts_isipesan" class="col-form-label">Isi Pesan:</label>
-				<textarea class="form-control" id="txts_isipesan" rows="5"></textarea>
-			  </div>
-			</form>
+			 <div class="card">
+                            <div class="card-body">
+                                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#p-text" type="button" role="tab" aria-controls="" aria-selected=" true">Pesan Text</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#p-media" type="button" role="tab" aria-controls="" aria-selected="false">Pesan Media</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#p-tombol" type="button" role="tab" aria-controls="" aria-selected="false">Pesan Button</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="pills-tabContent">
+                                    <div class="tab-pane fade show active" id="p-text" role="tabpanel" aria-labelledby="pills-home-tab">
+                                        <br>
+                                        <form action="" method="post" class="loadingbtn">
+                                            <input type="hidden" name="submitby" value="pesan-text">
+                                            <div class="row">
+                                                <div class="col-12 col-xl-6">
+                                                    <label>Device</label>
+                                                    <select class="js-states form-control" name="device" tabindex="-1" style="display: block; width: 100%">
+                                                        
+                                                            <option value=""></option>
+                                                       
+                                                    </select>
+                                                    <div class="mt-3">
+                                                        <label for="">Nomor Tujuan</label>
+                                                        <input type="text" name="nomor" class="form-control" required autocomplete="off">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-xl-6">
+                                                    <div class="mt-4">
+                                                        <textarea name="pesan" class="form-control" rows="10" placeholder="Pesan" required></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--<div class="text-end btnkirim mt-3">
+                                                <button type="submit" class="btn btn-primary"><i class="material-icons">send</i>Kirim</button>
+                                            </div>-->
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane fade" id="p-media" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                        <br>
+                                        <form action="" method="post" class="loadingbtn">
+                                            <input type="hidden" name="submitby" value="pesan-media">
+                                            <label>Device</label>
+                                            <select class="js-states form-control" name="device" tabindex="-1" style="display: block; width: 100%">
+                                               
+                                                    <option value=""></option>
+                                               
+                                            </select>
+
+                                            <div class="row">
+                                                <div class="col-12 col-xl-6">
+                                                    <div class="mt-3">
+                                                        <label for="">Nomor Tujuan</label>
+                                                        <input type="text" name="nomor" class="form-control" required autocomplete="off">
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <label for="">Link media ( JPG,JPEG,PDF )</label>
+                                                        <div class="input-group">
+                                                            <input type="text" id="inputmedia" name="media" class="form-control" placeholder="Link media">
+                                                            <span onclick="mediamodal()" class="btn btn-primary"><span class="material-icons pt-1">file_upload</span></span>
+                                                        </div>
+                                                        <small>Kosongi jika ingin kirim pesan saja.</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-xl-6">
+                                                    <div class="mt-3">
+                                                        <label for="">Pesan</label>
+                                                        <textarea name="pesan" class="form-control" rows="10" placeholder="Pesan" required></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--<div class="text-end btnkirim mt-3">
+                                                <button type="submit" class="btn btn-primary"><i class="material-icons">send</i>Kirim</button>
+                                            </div>-->
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane fade" id="p-tombol" role="tabpanel" aria-labelledby="pills-contact-tab">
+                                        <br>
+                                        <form action="" method="post" class="loadingbtn">
+                                            <input type="hidden" name="submitby" value="pesan-button">
+                                            <div class="row">
+                                                <div class="col-12 col-xl-6">
+                                                    <label>Device</label>
+                                                    <select class="js-states form-control" name="device" tabindex="-1" style="display: block; width: 100%">                                                      
+                                                            <option value=""></option>                                                    
+                                                    </select>
+                                                    <div class="mt-3">
+                                                        <label for="">Nomor Tujuan</label>
+                                                        <input type="text" name="nomor" class="form-control" required autocomplete="off">
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <label for="">Footer</label>
+                                                        <input type="text" name="footer" class="form-control" required>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <label for="">Button 1</label>
+                                                        <input type="text" name="btn1" class="form-control" required>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <label for="">Button 2</label>
+                                                        <input type="text" name="btn2" class="form-control" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-xl-6">
+                                                    <div class="mt-4">
+                                                        <textarea name="pesan" class="form-control" rows="10" placeholder="Pesan" required></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--<div class="text-end btnkirim mt-3">
+                                                <button type="submit" class="btn btn-primary"><i class="material-icons">send</i>Kirim</button>
+                                            </div>-->
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="bt_close_pesan">Close</button>

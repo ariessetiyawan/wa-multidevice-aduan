@@ -257,7 +257,9 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
             await delay(1000)
 
             if (isLegacy) {
-                await wa.chatRead(message.key, 1)
+				if	(autoreply){
+					await wa.chatRead(message.key, 1)
+				}
             } else {
 				//console.log(isiautores)
 				let rta =  isiautores.filter(it => it.KEYWORD === isipesan);
@@ -287,7 +289,9 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 						wa.sendMessage(message.key.remoteJid,pesannya)
 					}
 				}
-                await wa.sendReadReceipt(message.key.remoteJid, message.key.participant, [message.key.id])
+				if (autoreply){
+					await wa.sendReadReceipt(message.key.remoteJid, message.key.participant, [message.key.id])
+				}
 				
             }
         }
@@ -512,9 +516,14 @@ const cleanup = () => {
     })
 }
 const bacaautoresponse = async()=>{
-	let payload=new URLSearchParams({"aksi":"GAURES"})
-	let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
-	let res = await axios.post(url,payload);
+	//try{
+		let res=[]
+		let payload=new URLSearchParams({"aksi":"GAURES"})
+		let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
+		res = await axios.post(url,payload);
+	//} catch(error){
+		//res=[]
+	//}
 	return res
 	//console.log(res)
 }

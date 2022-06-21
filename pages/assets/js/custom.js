@@ -1,14 +1,13 @@
 $(document).ready(function() {
+	
 	$('#txt_noHP').val(localStorage.getItem('user_aktif'));	
-	console.log($('#txt_noHP').val(localStorage.getItem('user_aktif')))
-	//console.log('sessionStorage '+sessionStorage.getItem('wa_aduan_center')+","+sessionStorage.getItem('wa_aduan_center_login'))
     if (sessionStorage.getItem('wa_aduan_center')==0 || sessionStorage.getItem('wa_aduan_center_login')==0|| sessionStorage.getItem('wa_aduan_center')==undefined||sessionStorage.getItem('wa_aduan_center_login')==undefined){
 		location.href = "/pages/sign-in.html";
 	} else {
 		sessionStorage.setItem('wa_aduan_center_login',1)
 		
 	}
-
+	
 });
 function randomString(length) {
     var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'.split('');
@@ -134,7 +133,7 @@ $(document).on("click","#bt_save_pesan", function(){
 	  {buttonId: 'id3', buttonText: {displayText: 'Button 3'}, type: 0}
 	]
 
-	var isipesanx1={receiver: sip, 
+	var isipesanx={receiver: sip, 
 						message: {caption: pesanx,
 								  footer: "nice footer, link: https://google.com",
 								  image: {url: './pages/assets/img/logos/visa.png'},
@@ -142,7 +141,7 @@ $(document).on("click","#bt_save_pesan", function(){
 								  headerType: 2
 						}
 				}
-	//var data={"receiver":sip,"message":isipesanx}
+	var isipesanx={"receiver":sip,"message":pesanx}
 	//console.log(isipesanx)
 	var idss=$('#txt_noHP').val()
 	$.ajax({
@@ -182,7 +181,6 @@ $(document).on("click","#mnuL_setting1", function(){
 	//alert('mnuL_setting1')
 	$('#mnuL_setting').trigger("click")
 })
-
 $(document).on("click","#bt_close_setting", function(){
 	$('#settingMdl').modal('hide')
 })

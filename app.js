@@ -16,7 +16,7 @@ let IDGAS='';
 let sessionA='';
 global.historycat=[]
 global.isiautores=[]
-
+global.autoreply=process.env.AUTOREPLY ?? false;
 const app = express()
 const host = process.env.HOST ?? '127.0.0.1'
 const port = parseInt(process.env.PORT ?? 8000)
@@ -24,6 +24,7 @@ const httpServer = http.createServer(app)
 const io = new Server(httpServer, { cors: { origin: '*' } });
 IDGAS=process.env.IDGAS
 global.socketwa=io;
+global.unreadwa=process.env.UNREAD ?? false
 io.on('connection', (socket) => {
     //console.log('a user connected');
 	io.emit('info_setting');   
@@ -135,10 +136,13 @@ const kirimWA = cron.schedule(
 		}catch(e){}
 	}
 );
-let dt = await bacaautoresponse()
-isiautores=dt.data.rows
-httpServer.listen(port, host, () => {
+
+httpServer.listen(port, host, async () => {
     init()
+	/*let dt = await bacaautoresponse()
+	if (dt){
+		isiautores=dt.data.rows
+	}*/
 	//const dt= bacaautoresponse()
 	//console.log((dt.data))
     console.log(`Server is listening on http://${host}:${port}`)
