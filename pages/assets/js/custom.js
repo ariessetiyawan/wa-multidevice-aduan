@@ -1,5 +1,60 @@
 $(document).ready(function() {
-	
+			socket.on("qr", src => {
+				const qrcode = document.getElementById("qrcode")
+				//console.log(src)
+				qrcode.setAttribute("src", src)
+				qrcode.setAttribute("alt", "qrcode")
+			})
+			socket.on("userall", src => {
+				userall=(src)
+				/*$('#txt_noHP').empty()
+				var idhp=''
+				for (var i=0;i<src.length;i++){
+					console.log(src[i]['SESSIONA'])
+					idhp+='<option value="'+src[i]['SESSIONA']+'">'+src[i]['SESSIONA']+'</option>';
+				}
+				console.log(idhp)
+				$('#txt_noHP').append(idhp)*/
+			})
+			socket.on("info_setting", src => {
+				var frms={
+						"sessionid":localStorage.getItem('user_aktif'),
+						"idgas":localStorage.getItem('wacenter_IDGAS'),
+						"idsheet":localStorage.getItem('wacenter_IDSHEET'),
+						"urlduan":localStorage.getItem('wacenter_urladuan'),
+						"urlapp":localStorage.getItem('wacenter_urlapp'),
+						"backup":localStorage.getItem('wacenter_sessionurl'),
+						"response":localStorage.getItem('wacenter_urlresponse'),
+						"header":localStorage.getItem('wacenter_urlheaderimg'),
+						"autoreply":localStorage.getItem('wacenter_autoreply'),
+						"home":localStorage.getItem('wacenter_home'),
+						"title":localStorage.getItem('wacenter_title'),
+						"footer":localStorage.getItem('wacenter_footer'),
+					}
+				console.log(frms)
+				socket.emit("setting_form",frms)
+			})
+			socket.on("statusscan", src => {
+				//console.log(src)
+				if (src.status){
+					localStorage.setItem('wacenter_sessionurl',src.urlfile)
+					localStorage.setItem('user_aktif',$('#txt_noHP').val())
+					$('#txts_sessionurl').val(src.urlfile)
+					const qrcode = document.getElementById("qrcode")
+					qrcode.setAttribute("width", "80%")
+					qrcode.setAttribute("src", "./assets/img/check.svg")
+				}
+			})
+			socket.on("qrstatus", src => {
+				qrcode.setAttribute("src", src)
+				qrcode.setAttribute("alt", "loading")
+			})
+			socket.on("log", log => {
+				//console.log(log)
+			})	
+			socket.on("time", log => {
+				//console.log(log)
+			})
 	$('#txt_noHP').val(localStorage.getItem('user_aktif'));	
     if (sessionStorage.getItem('wa_aduan_center')==0 || sessionStorage.getItem('wa_aduan_center_login')==0|| sessionStorage.getItem('wa_aduan_center')==undefined||sessionStorage.getItem('wa_aduan_center_login')==undefined){
 		location.href = "/pages/sign-in.html";
@@ -169,11 +224,12 @@ $(document).on("click","#bt_save_pesan", function(){
 			if (e.success){
 				localStorage.setItem('user_aktif',$('#txt_noHP').val())
 			}
-			alert(e.message)
+			//alert(e.message)
 			console.log(e)
 		},
 		error:function(e){
 			console.log(e)
+			alert(e.message)
 		}
 	})
 })
@@ -195,7 +251,9 @@ $(document).on("click","#mnuL_setting", function(){
 	$('#txts_responseurl').val(localStorage.getItem('wacenter_urlresponse'))
 	$('#txts_headerimg').val(localStorage.getItem('wacenter_urlheaderimg'))
 	$('#txts_footer').val(localStorage.getItem('wacenter_footer'))
-	
+	$('#txts_title').val(localStorage.getItem('wacenter_title'))
+	$('#txts_home').val(localStorage.getItem('wacenter_home'))
+	$('#txts_autoreply').val(localStorage.getItem('wacenter_autoreply'))
 	$('#settingMdl').modal('toggle');
 })
 $(document).on("click","#mnuL_setting1", function(){
@@ -218,6 +276,8 @@ $(document).on("click","#bt_save_setting", function(){
 			"urlheaderimg":$('#txts_headerimg').val(),
 			"autoreply":$('#txts_autoreply').val(),
 			"footertxt":$('#txts_footer').val(),
+			"title":$('#txts_title').val(),
+			"home":$('#txts_home').val(),
 			"username":sessionStorage.getItem('wa_aduan_center_username'),
 			"password":sessionStorage.getItem('wa_aduan_center_password'),
 			"aksi":"10"
@@ -239,6 +299,8 @@ $(document).on("click","#bt_save_setting", function(){
 					localStorage.setItem('wacenter_urlheaderimg',$('#txts_headerimg').val())
 					localStorage.setItem('wacenter_autoreply',$('#txts_autoreply').val())
 					localStorage.setItem('wacenter_footer',$('#txts_footer').val())
+					localStorage.setItem('wacenter_title',$('#txts_title').val())
+					localStorage.setItem('wacenter_home',$('#txts_home').val())
 					var frms={
 						"sessionid":localStorage.getItem('user_aktif'),
 						"idgas":$('#txts_IDGAS').val(),
@@ -249,6 +311,9 @@ $(document).on("click","#bt_save_setting", function(){
 						"response":$('#txts_responseurl').val(),
 						"header":$('#txts_headerimg').val(),
 						"autoreply":$('#txts_autoreply').val(),
+						"footer":$('#txts_footer').val(),
+						"home":$('#txts_home').val(),
+						"title":$('#txts_title').val(),
 					}
 					socket.emit("setting_form",frms)
 					$('#settingMdl').modal('hide')

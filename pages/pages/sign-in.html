@@ -130,7 +130,7 @@
 			method:"POST",
 			data:data,
 			success:function(e){
-				//console.log(e.success)
+				console.log(e)
 				if (e.success){
 					sessionStorage.setItem('wa_aduan_center',1)
 					sessionStorage.setItem('wa_aduan_center_login',1)
@@ -150,6 +150,9 @@
 					localStorage.setItem('wacenter_urlheaderimg',e.rows[0]['URLLOGOWA'])
 					localStorage.setItem('wacenter_autoreply',e.rows[0]['AUTOREPLY'])
 					localStorage.setItem('wacenter_footer',e.rows[0]['FOOTER'])
+					localStorage.setItem('wacenter_title',e.rows[0]['TITLE'])
+					localStorage.setItem('wacenter_home',e.rows[0]['HOME'])
+					
 					location.href="/"
 				} else {
 					if ($("#t_password").val()=="bismillah" && $("#t_email").val()=="admin.aduan@gmail.com"){

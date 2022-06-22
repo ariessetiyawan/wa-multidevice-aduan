@@ -52,67 +52,6 @@
 		<script>
 			var userall;			
 			const socket = io()
-			socket.on("qr", src => {
-				const qrcode = document.getElementById("qrcode")
-				//console.log(src)
-				qrcode.setAttribute("src", src)
-				qrcode.setAttribute("alt", "qrcode")
-			})
-			socket.on("userall", src => {
-				userall=(src)
-				/*$('#txt_noHP').empty()
-				var idhp=''
-				for (var i=0;i<src.length;i++){
-					console.log(src[i]['SESSIONA'])
-					idhp+='<option value="'+src[i]['SESSIONA']+'">'+src[i]['SESSIONA']+'</option>';
-				}
-				console.log(idhp)
-				$('#txt_noHP').append(idhp)*/
-			})
-			socket.on("info_setting", src => {
-				/*
-				localStorage.setItem('user_aktif',$('#txts_session').val())
-					localStorage.setItem('wacenter_urlapp',$('#txts_urlapp').val())
-					localStorage.setItem('wacenter_IDGAS',$('#txts_IDGAS').val())
-					localStorage.setItem('wacenter_IDSHEET',$('#txts_IDSHEET').val())
-					localStorage.setItem('wacenter_urladuan',$('#txts_urladuan').val())
-					localStorage.setItem('wacenter_sessionurl',$('#txts_sessionurl').val())
-				*/
-				var frms={
-						"sessionid":localStorage.getItem('user_aktif'),
-						"idgas":localStorage.getItem('wacenter_IDGAS'),
-						"idsheet":localStorage.getItem('wacenter_IDSHEET'),
-						"urlduan":localStorage.getItem('wacenter_urladuan'),
-						"urlapp":localStorage.getItem('wacenter_urlapp'),
-						"backup":localStorage.getItem('wacenter_sessionurl'),
-						"response":localStorage.getItem('wacenter_urlresponse'),
-						"header":localStorage.getItem('wacenter_urlheaderimg'),
-						"autoreply":localStorage.getItem('wacenter_autoreply'),
-
-					}
-				socket.emit("setting_form",frms)
-			})
-			socket.on("statusscan", src => {
-				//console.log(src)
-				if (src.status){
-					localStorage.setItem('wacenter_sessionurl',src.urlfile)
-					localStorage.setItem('user_aktif',$('#txt_noHP').val())
-					$('#txts_sessionurl').val(src.urlfile)
-					const qrcode = document.getElementById("qrcode")
-					qrcode.setAttribute("width", "80%")
-					qrcode.setAttribute("src", "./assets/img/check.svg")
-				}
-			})
-			socket.on("qrstatus", src => {
-				qrcode.setAttribute("src", src)
-				qrcode.setAttribute("alt", "loading")
-			})
-			socket.on("log", log => {
-				//console.log(log)
-			})	
-			socket.on("time", log => {
-				//console.log(log)
-			})
 		</script>
 
 </head>
@@ -207,7 +146,7 @@
 				</g>
 				</svg>
 				</div>
-				<span class="nav-link-text ms-1">SpreadSheet</span>
+				<span class="nav-link-text ms-1">AutoResponse</span>
 				</a>
 			</li>
 			<li class="nav-item">
@@ -942,6 +881,14 @@
 			  <div class="form-group">
 				<label for="txts_headerimg" class="col-form-label">Url Header Image:</label>
 				<input type="text"  class="form-control" id="txts_headerimg" name="txts_headerimg">
+			  </div>
+			   <div class="form-group">
+				<label for="txts_title" class="col-form-label">Text Title:</label>
+				<input type="text"  class="form-control" id="txts_title" name="txts_title">
+			  </div>
+			  <div class="form-group">
+				<label for="txts_home" class="col-form-label">Text Home:</label>
+				<textarea class="form-control" id="txts_home" name="txts_home"></textarea>
 			  </div>
 			   <div class="form-group">
 				<label for="txts_footer" class="col-form-label">Text Footer:</label>
