@@ -18,7 +18,6 @@ import { toDataURL } from 'qrcode'
 import __dirname from './dirname.js'
 import response from './response.js'
 import dotenv from 'dotenv'
-import request from 'request';
 //import updateEnv from './updateEnv.js'
 
 const env = fs.readFileSync('.env')
