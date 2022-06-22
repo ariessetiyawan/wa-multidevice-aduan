@@ -17,6 +17,7 @@ let sessionA='';
 global.historycat=[]
 global.isiautores=[]
 global.settingall=[]
+global.params={}
 global.autoreply=process.env.AUTOREPLY ?? false;
 const app = express()
 const host = process.env.HOST ?? '127.0.0.1'
@@ -54,6 +55,7 @@ io.on('connection', (socket) => {
 		dt['rows']=dt1
 		let rta =  settingall.filter(it => it.SESSIONA === message['sessionid']);
 		if (rta.length<1){
+			params=dt1
 			settingall.push(dt)
 		} else {
 			for( var i = 0; i < settingall.length; i++){ 
@@ -64,11 +66,15 @@ io.on('connection', (socket) => {
 			settingall.push(dt)
 		}
 		//console.log(settingall)
-		let dtx = await bacaautoresponse(message['idgas'])
-			if (dtx){
-				isiautores=dtx.data.rows
-				//console.log(isiautores)
+		try{
+			let dtx = await bacaautoresponse(message['idgas'])
+				if (dtx){
+					isiautores=dtx.data.rows
+					//console.log(isiautores)
 			}
+		} catch(e){
+			console.log('error console.log(isiautores)')
+		}
 		io.emit('userall', settingall ); 
 		/*const envUpdate = {
 						'SESSIONSNAME': BACKSESSION,
@@ -89,7 +95,6 @@ app.use('/', routes)
 
 httpServer.listen(port, host, async () => {
     init()
-	
     console.log(`Server is listening on http://${host}:${port}`)
 })
 

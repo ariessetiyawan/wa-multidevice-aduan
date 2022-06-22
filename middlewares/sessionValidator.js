@@ -1,14 +1,17 @@
-import { isSessionExists,downloadFileSession } from '../whatsapp.js'
+import { isSessionExists,downloadFileSession,createSession } from '../whatsapp.js'
 import response from './../response.js'
 
 const validate = (req, res, next) => {
     const sessionId = req.query.id ?? req.params.id
-
+	console.log(!isSessionExists(sessionId))
     if (!isSessionExists(sessionId)) {
-		downloadFileSession(sessionId)
-        return response(res, 404, false, 'Session not found.')
+		if (!isSessionFileExists(sessionId)){
+			downloadFileSession(sessionId)
+		} else {
+			return response(res, 404, false, 'Session not found.')
+		}
     } 
-
+	//console.log(sessionId)
     res.locals.sessionId = sessionId
     next()
 }

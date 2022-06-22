@@ -18,6 +18,7 @@ import { toDataURL } from 'qrcode'
 import __dirname from './dirname.js'
 import response from './response.js'
 import dotenv from 'dotenv'
+import request from 'request';
 //import updateEnv from './updateEnv.js'
 
 const env = fs.readFileSync('.env')
@@ -215,7 +216,15 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 	/*setInterval(() => {
 		store.writeToFile(`${sessionId}_store`)
 	}, 10_000)*/
-	
+	try{
+	//console.log(settingall)
+	let rta =  settingall.filter(it => it.SESSIONA === sessionId);
+		if (rta.length>0){
+			console.log(rta)
+		
+			
+		}
+	}catch(e){}
     sessions.set(sessionId, { ...wa, store, isLegacy })
 
     wa.ev.on('creds.update', saveState)
@@ -255,24 +264,28 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 		
         if (!message.key.fromMe && m.type === 'notify') {
             await delay(1000)
-
             if (isLegacy) {
 				if	(autoreply){
 					await wa.chatRead(message.key, 1)
 				}
             } else {
 				//console.log(isiautores)
-				let rta =  isiautores.filter(it => it.KEYWORD === isipesan.toUpperCase());
+				var rta =[]
+				try{
+					var rta =  isiautores.filter(it => it.KEYWORD === isipesan.toUpperCase());
+				} catch(e){
+					var rta =[]
+				}
 				const templateButtons = [
 						//{index: 1, urlButton: {displayText: '👍 IKM KUA', url: 'https://github.com/adiwajshing/Baileys'}},
 						{index: 2, quickReplyButton: {displayText: '👍 IKM KUA', id: 'id_IKM'}},
-						{index: 1, urlButton: {displayText: '🗣 PENGADUAN KUA', url: 'https://forms.gle/BrptPEp652YxYWRb7'}},
-						{index: 3, urlButton: {displayText: '📍 REVIEW KAMI', url: 'https://g.page/KUA_JOGOROTO?gm'}},
+						{index: 1, urlButton: {displayText: '🗣 PENGADUAN KUA', url: params['URLADUAN']}},
+						{index: 3, urlButton: {displayText: '📍 REVIEW KAMI', url: params['FOOTER']}},
 						//{index: 4, quickReplyButton: {displayText: 'This is a reply,\nhttps://forms.gle/BrptPEp652YxYWRb7 ', id: 'id-like-buttons-message'}},
 					]
 				if (rta.length>0){
 					
-					let pesannya={"image":{"url":"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj-lG8aAz9wDVE7ThCr_N7XaW9CT_UbLVw0_mWwufDvPrgh_uDnhhKEjhohpixpPEDcUI0fT8XBhdM5ba1IJJ89ax5-0-ioOY07xshf5aaAfdhYVCG_oPB1QrDPCjkUeKkGunjxJIA2GGitOh2FoFQQDFyv96vMq-lWlrjeT8G7pp7fs-KQdr1aB71U/s1600/ADUAN_logo.jpg"},"caption":rta[0]['DESKRIPSI'],"footer":"Mesin Penjawab KUA","templateButtons":templateButtons}
+					let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
 					historycat['nomor']=message.key.remoteJid
 					historycat['pesan']=pesannya
 					wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
@@ -285,11 +298,11 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 						  {buttonId: 'id4', buttonText: {displayText: '😱 Kurang Bagus'}, type: 1}
 						]
 					
-						let pesannya={"image":{"url":"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj-lG8aAz9wDVE7ThCr_N7XaW9CT_UbLVw0_mWwufDvPrgh_uDnhhKEjhohpixpPEDcUI0fT8XBhdM5ba1IJJ89ax5-0-ioOY07xshf5aaAfdhYVCG_oPB1QrDPCjkUeKkGunjxJIA2GGitOh2FoFQQDFyv96vMq-lWlrjeT8G7pp7fs-KQdr1aB71U/s1600/ADUAN_logo.jpg"},"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":"Mesin Penjawab KUA","buttons":buttons}
+						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":params['FOOTER'],"buttons":buttons}
 						wa.sendMessage(message.key.remoteJid,pesannya)
 					} else {
 						let rta =  isiautores.filter(it => it.KEYWORD === 'INFO');
-						let pesannya={"image":{"url":"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj-lG8aAz9wDVE7ThCr_N7XaW9CT_UbLVw0_mWwufDvPrgh_uDnhhKEjhohpixpPEDcUI0fT8XBhdM5ba1IJJ89ax5-0-ioOY07xshf5aaAfdhYVCG_oPB1QrDPCjkUeKkGunjxJIA2GGitOh2FoFQQDFyv96vMq-lWlrjeT8G7pp7fs-KQdr1aB71U/s1600/ADUAN_logo.jpg"},"caption":rta[0]['DESKRIPSI'],"footer":"Mesin Penjawab KUA","templateButtons":templateButtons}
+						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
 						historycat['nomor']=message.key.remoteJid
 						historycat['pesan']=pesannya
 						wa.sendMessage(message.key.remoteJid,pesannya)
@@ -350,6 +363,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
                     response(res, 500, false, 'Unable to create session.')
                 }
 				
+				console.log(`connection delete Session statusCode ${statusCode} connection ${connection}`)
                 return deleteSession(sessionId, isLegacy)
             }
 
@@ -412,15 +426,18 @@ const setEnvValue=(key, value)=> {
     fs.writeFileSync("./.env", ENV_VARS.join(os.EOL));
 
 }
-const downloadFileSession=(ids)=>{
-	const url=process.env.SESSIONSNAME ?? 'aries.json'
+const downloadFileSession=(ids,isLegacy = false)=>{
+	try{
+	const sessionFile = (isLegacy ? 'legacy_' : 'md_') + ids
+	const url='https://drive.google.com/uc?export=view&id='+params['BACKSESSION']//process.env.SESSIONSNAME ?? 'aries.json'
 	axios({
-					method: "get",
-					url: url,//res.data.rows.urlfile,
-					responseType: "stream"
-				}).then(function (response) {
-					response.data.pipe(fs.createWriteStream(sessionsDir(sessionFile)));
-				});
+			method: "get",
+			url: url,//res.data.rows.urlfile,
+			responseType: "stream"
+		}).then(function (response) {
+			response.data.pipe(fs.createWriteStream(sessionsDir(sessionFile)));
+		});
+	} catch(e){}
 }
 
 /**
@@ -522,14 +539,15 @@ const cleanup = () => {
     })
 }
 const bacaautoresponse = async(idg)=>{
-	//try{
-		let res=[]
+	var res=[]
+	try{
+		var res=[]
 		let payload=new URLSearchParams({"aksi":"GAURES"})
 		let url='https://script.google.com/macros/s/'+idg+'/exec'
 		res = await axios.post(url,payload);
-	//} catch(error){
-		//res=[]
-	//}
+	} catch(error){
+		var res=[]
+	}
 	return res
 	//console.log(res)
 }
@@ -562,6 +580,7 @@ const base64Encode =(file) => {
 }
 export {
     isSessionExists,
+	isSessionFileExists,
     createSession,
 	createSessionP,
     getSession,
