@@ -335,8 +335,8 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 						wa.sendMessage(message.key.remoteJid,pesannya)
 					} else if (isipesan=='mnukartunikah'){
 						const templateButtons = [
-							{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
-							{index: 2, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
+							//{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
+							{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
 						]
 					
 						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Silahkan ketik *BN#[nomor seri porporasi buku nikah anda]*\n\ncontoh: *BN#JT12XXXXX*","footer":params['FOOTER'],"templateButtons":templateButtons}
