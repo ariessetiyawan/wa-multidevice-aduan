@@ -239,178 +239,187 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
     // Automatically read incoming messages, uncomment below codes to enable this behaviour
 
     wa.ev.on('messages.upsert', async (m) => {
-        const message = m.messages[0]
-		////console.log(message.key.remoteJid)
-		
-		//console.log(getSession(sessionId).store.chats.get(message.key.remoteJid))
-		//const lastMsgInChat = await getLastMessageInChat(message.key.remoteJid) // implement this on your end
-		//console.log(lastMsgInChat)
-		//await sock.chatModify({ archive: true, lastMessages: [lastMsgInChat] },message.key.remoteJid)
-		//console.log(message.message.listResponseMessage)
-		var isipesan=''
-		  if (message.message.hasOwnProperty('extendedTextMessage')){
-			isipesan=message.message.extendedTextMessage.text
-		  } else if (message.message.hasOwnProperty('listResponseMessage')){
-			isipesan=message.message.listResponseMessage.singleSelectReply.selectedRowId
-		  } else if (message.message.hasOwnProperty('conversation')){
-			isipesan=message.message.conversation
-		  } else if (message.message.hasOwnProperty('templateButtonReplyMessage')){
-			  isipesan=(message.message.templateButtonReplyMessage.selectedId)
-		  } else if (message.message.hasOwnProperty('buttonsResponseMessage')){
-			  //console.log(message)
-			  //console.log(message.message.buttonsResponseMessage.contextInfo)
-			  isipesan=(message.message.buttonsResponseMessage.selectedButtonId)
-		  } else {
-			isipesan=''
-		  }
-		
-        if (!message.key.fromMe && m.type === 'notify') {
-            await delay(1000)
-            if (isLegacy) {
-				if	(autoreply){
-					await wa.chatRead(message.key, 1)
-				}
-            } else {
-				//console.log(isiautores)
-				var rta =[]
-				try{
-					var rta =  isiautores.filter(it => it.KEYWORD === isipesan.toUpperCase());
-				} catch(e){
-					var rta =[]
-				}
-				const templateButtons = [
-						//{index: 1, urlButton: {displayText: '👍 IKM KUA', url: 'https://github.com/adiwajshing/Baileys'}},
-						{index: 2, quickReplyButton: {displayText: '👍 IKM KUA', id: 'id_IKM'}},
-						{index: 1, urlButton: {displayText: '🗣 PENGADUAN KUA', url: params['URLADUAN']}},
-						{index: 3, urlButton: {displayText: '📍 REVIEW KAMI', url: params['FOOTER']}},
-						//{index: 4, quickReplyButton: {displayText: 'This is a reply,\nhttps://forms.gle/BrptPEp652YxYWRb7 ', id: 'id-like-buttons-message'}},
-					]
-				
-				if (rta.length>0){
-					const templateButtons = [
-							{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-						]
-					let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
-					historycat['nomor']=message.key.remoteJid
-					historycat['pesan']=pesannya
-					//console.log('pesannya',pesannya)
-					wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
+		try{
+			const message = m.messages[0]
+			//console.log(message)
+			var isipesan=''
+			  if (message.message.hasOwnProperty('extendedTextMessage')){
+				isipesan=message.message.extendedTextMessage.text
+			  } else if (message.message.hasOwnProperty('listResponseMessage')){
+				isipesan=message.message.listResponseMessage.singleSelectReply.selectedRowId
+			  } else if (message.message.hasOwnProperty('conversation')){
+				isipesan=message.message.conversation
+			  } else if (message.message.hasOwnProperty('templateButtonReplyMessage')){
+				  isipesan=(message.message.templateButtonReplyMessage.selectedId)
+			  } else if (message.message.hasOwnProperty('buttonsResponseMessage')){
+				  isipesan=(message.message.buttonsResponseMessage.selectedButtonId)
+			  } else {
+				isipesan=''
+			  }
+			//console.log('isipesan->',isipesan)
+			if (!message.key.fromMe && m.type === 'notify') {
+				await delay(1000)
+				if (isLegacy) {
+					if	(autoreply){
+						await wa.chatRead(message.key, 1)
+					}
 				} else {
-					//console.log('isipesan ->',message.message)
-					if (isipesan=='mnuIKM'){
-						const buttons = [
-						  {buttonId: 'id1', buttonText: {displayText: '🤩 Sangat Bagus'}, type: 1},
-						  {buttonId: 'id2', buttonText: {displayText: '😍 Bagus'}, type: 1},
-						  {buttonId: 'id3', buttonText: {displayText: '😊 Biasa saja'}, type: 1},
-						  {buttonId: 'id4', buttonText: {displayText: '😱 Kurang Bagus'}, type: 1}
+					//console.log(isiautores)
+					var rta =[]
+					try{
+						var rta =  isiautores.filter(it => it.KEYWORD === isipesan.toUpperCase());
+					} catch(e){
+						var rta =[]
+					}
+					const templateButtons = [
+							//{index: 1, urlButton: {displayText: '👍 IKM KUA', url: 'https://github.com/adiwajshing/Baileys'}},
+							{index: 2, quickReplyButton: {displayText: '👍 IKM KUA', id: 'id_IKM'}},
+							{index: 1, urlButton: {displayText: '🗣 PENGADUAN KUA', url: params['URLADUAN']}},
+							{index: 3, urlButton: {displayText: '📍 REVIEW KAMI', url: params['FOOTER']}},
+							//{index: 4, quickReplyButton: {displayText: 'This is a reply,\nhttps://forms.gle/BrptPEp652YxYWRb7 ', id: 'id-like-buttons-message'}},
 						]
 					
-						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":params['FOOTER'],"buttons":buttons}
-						wa.sendMessage(message.key.remoteJid,pesannya)
-				} else if (isipesan=='id1'||isipesan=='id2'||isipesan=='id3'||isipesan=='id4'){
+					if (rta.length>0){
 						const templateButtons = [
-							{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-						]
-					
-						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"🙏 Terima kasih, atas partisipasi anda dalam IKM KUA Kami.","footer":params['FOOTER'],"templateButtons":templateButtons}
-						//console.log(pesannya)
-						wa.sendMessage(message.key.remoteJid,pesannya)
-					} else if (isipesan=='mnudaftar'){
-						const templateButtons = [
-							{index: 1, urlButton: {displayText: 'Daftar Nikah', url: 'https://simkah.kemenag.go.id/daftarnikah/create'}},
-							{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-						]
-					
-						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk Daftar Nikah secara online silahkan kunjungi link berikut https://simkah.kemenag.go.id/daftarnikah/create atau klik tombol Daftar Nikah dibawah ini","footer":params['FOOTER'],"templateButtons":templateButtons}
-						//console.log(pesannya)
-						wa.sendMessage(message.key.remoteJid,pesannya)
-					} else if (isipesan=='mnuaduan'){
-						const templateButtons = [
-							{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
-							{index: 2, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-						]
-					
-						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengajukan pengaduan, silahkan isi form berikut ini "+params['URLADUAN']+" atau klik link dibawah ini..","footer":params['FOOTER'],"templateButtons":templateButtons}
-						//console.log(pesannya)
-						wa.sendMessage(message.key.remoteJid,pesannya)
-					} else if (isipesan=='mnukartunikah'){
-						const templateButtons = [
-							//{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
-							{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-						]
-					
-						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Silahkan ketik *BN#[nomor seri porporasi buku nikah anda]*\n\ncontoh: *BN#JT12XXXXX*","footer":params['FOOTER'],"templateButtons":templateButtons}
-						//console.log(pesannya)
-						wa.sendMessage(message.key.remoteJid,pesannya)
-					} else if (isipesan=='mnucekdata'){
-						const templateButtons = [
-							//{index: 1, urlButton: {displayText: '🔙 Kembali', url: ""mnuback}},
-							{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-						]
-					
-						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengetahui riwayat pernikahan anda ketik *BIN#[nama anda]#[ nama orang tua laki-laki]*\n\ncontoh :\n*BIN#siti aminah#Joko Suparto*","footer":params['FOOTER'],"templateButtons":templateButtons}
-						//console.log(pesannya)
-						wa.sendMessage(message.key.remoteJid,pesannya)
-					} else if (isipesan=='mnujdwl'){
-						const templateButtons = [
-							//{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
-							{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-						]
-					
-						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengetahui jadwal nikah KUA kami, ketik *NC#[tanggal akad tanggal/bulan/tahun]*\n\ncontoh:\n*NC#01/02/2022*","footer":params['FOOTER'],"templateButtons":templateButtons}
-						//console.log(pesannya)
-						wa.sendMessage(message.key.remoteJid,pesannya)
-					} else {
-						/*let rta =  isiautores.filter(it => it.KEYWORD === 'INFO');*/
-						let pesannya={
-						  "text": params['HOME'],
-						  "footer": params['FOOTER'],
-						  "title": params['TITLE'],
-						  "buttonText": "Pilih Menu",  
-						  "sections":[
-							{
-							"title": "💡 INFORMASI",
-							"rows": 
-							[
-
-								{"title": "NIKAH", "rowId": "nikah", "description": "Untuk Info Syarat Nikah"},
-								{"title": "RUJUK", "rowId": "rujuk", "description": "Untuk Info Syarat Rujuk"},
-								{"title": "Rekom", "rowId": "rekom", "description": "Untuk Info Syarat Rekom Nikah"},
-								{"title": "Duplikat", "rowId": "duplikat", "description": "Untuk Info Syarat Duplikat Buku Nikah"},
-								{"title": "Legalisir", "rowId": "legalisir", "description": "Untuk Info Syarat Legalisir"},
-								{"title": "Wakaf", "rowId": "wakaf", "description": "Untuk Info Syarat Wakaf"},
-								{"title": "Haji", "rowId": "haji", "description": "Untuk Info Syarat Haji"},
-								{"title": "Taukil Wali", "rowId": "taukilwali", "description": "Untuk Info Syarat Taukil Wali"},
-								{"title": "Mualaf", "rowId": "mualaf", "description": "Untuk Info Syarat Mualaf"}
+								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
 							]
-							},
-							{
-							"title": "💡 LAYANAN",
-							"rows": 
-							[
-
-								{"title": "KARTU NIKAH", "rowId": "mnukartunikah", "description": "Layanan Kartu Nikah Digital"},
-								{"title": "DAFTAR NIKAH", "rowId": "mnudaftar", "description": "Layanan Daftar Nikah Online"},
-								{"title": "CEK BUKUNIKAH", "rowId": "mnucekdata", "description": "Layanan Cek Data Nikah"},
-								{"title": "JADWAL NIKAH", "rowId": "mnujdwl", "description": "Layanan Jadwal Nikah"},
-								{"title": "IKM", "rowId": "mnuIKM", "description": "Layanan Index Kepuasan Masyarakat"},
-								{"title": "PENGADUAN", "rowId": "mnuaduan", "description": "Layanan Pengaduan Online"}
-							]
-							}
-							]
-						}
+						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
 						historycat['nomor']=message.key.remoteJid
 						historycat['pesan']=pesannya
 						//console.log('pesannya',pesannya)
-						wa.sendMessage(message.key.remoteJid,pesannya)
+						wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
+					} else {
+						
+						if (isipesan=='mnuIKM'){
+							const buttons = [
+							  {buttonId: 'id1', buttonText: {displayText: '🤩 Sangat Bagus'}, type: 1},
+							  {buttonId: 'id2', buttonText: {displayText: '😍 Bagus'}, type: 1},
+							  {buttonId: 'id3', buttonText: {displayText: '😊 Biasa saja'}, type: 1},
+							  {buttonId: 'id4', buttonText: {displayText: '😱 Kurang Bagus'}, type: 1}
+							]
+						
+							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":params['FOOTER'],"buttons":buttons}
+							wa.sendMessage(message.key.remoteJid,pesannya)
+						} else if (isipesan=='id1'||isipesan=='id2'||isipesan=='id3'||isipesan=='id4'){
+							const templateButtons = [
+								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
+							]
+						
+							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"🙏 Terima kasih, atas partisipasi anda dalam IKM KUA Kami.","footer":params['FOOTER'],"templateButtons":templateButtons}
+							//console.log(pesannya)
+							wa.sendMessage(message.key.remoteJid,pesannya)
+						} else if (isipesan=='mnudaftar'){
+							const templateButtons = [
+								{index: 1, urlButton: {displayText: 'Daftar Nikah', url: 'https://simkah.kemenag.go.id/daftarnikah/create'}},
+								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
+							]
+						
+							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk Daftar Nikah secara online silahkan kunjungi link berikut https://simkah.kemenag.go.id/daftarnikah/create atau klik tombol Daftar Nikah dibawah ini","footer":params['FOOTER'],"templateButtons":templateButtons}
+							//console.log(pesannya)
+							wa.sendMessage(message.key.remoteJid,pesannya)
+						} else if (isipesan=='mnuaduan'){
+							const templateButtons = [
+								{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
+								{index: 2, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
+							]
+						
+							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengajukan pengaduan, silahkan isi form berikut ini "+params['URLADUAN']+" atau klik link dibawah ini..","footer":params['FOOTER'],"templateButtons":templateButtons}
+							//console.log(pesannya)
+							wa.sendMessage(message.key.remoteJid,pesannya)
+						} else if (isipesan=='mnukartunikah'){
+							const templateButtons = [
+								//{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
+								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
+							]
+						
+							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Silahkan ketik *BN#[nomor seri porporasi buku nikah anda]*\n\ncontoh: *BN#JT12XXXXX*","footer":params['FOOTER'],"templateButtons":templateButtons}
+							//console.log(pesannya)
+							wa.sendMessage(message.key.remoteJid,pesannya)
+						} else if (isipesan=='mnucekdata'){
+							const templateButtons = [
+								//{index: 1, urlButton: {displayText: '🔙 Kembali', url: ""mnuback}},
+								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
+							]
+						
+							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengetahui riwayat pernikahan anda ketik *BIN#[nama anda]#[ nama orang tua laki-laki]*\n\ncontoh :\n*BIN#siti aminah#Joko Suparto*","footer":params['FOOTER'],"templateButtons":templateButtons}
+							//console.log(pesannya)
+							wa.sendMessage(message.key.remoteJid,pesannya)
+						} else if (isipesan=='mnujdwl'){
+							const templateButtons = [
+								//{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
+								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
+							]
+						
+							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengetahui jadwal nikah KUA kami, ketik *NC#[tanggal akad tanggal/bulan/tahun]*\n\ncontoh:\n*NC#01/02/2022*","footer":params['FOOTER'],"templateButtons":templateButtons}
+							//console.log(pesannya)
+							wa.sendMessage(message.key.remoteJid,pesannya)
+						} else {
+							/*let rta =  isiautores.filter(it => it.KEYWORD === 'INFO');*/
+							//console.log('params->',params)
+							if (!params){
+								let payload = new URLSearchParams({ 'aksi':'12','session': message['sessionid']});
+								try{
+									//ke gsheet induk
+									let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
+									let res = await axios.post(url, payload);
+									console.log(res)
+									if (res.data.success==true){
+										params=(res.data.rows)
+									}
+								} catch(e){}
+							}
+							let pesannya={
+							  "text": params['HOME'],
+							  "footer": params['FOOTER'],
+							  "title": params['TITLE'],
+							  "buttonText": "Pilih Menu",  
+							  "sections":[
+								{
+								"title": "💡 INFORMASI",
+								"rows": 
+								[
+
+									{"title": "NIKAH", "rowId": "nikah", "description": "Untuk Info Syarat Nikah"},
+									{"title": "RUJUK", "rowId": "rujuk", "description": "Untuk Info Syarat Rujuk"},
+									{"title": "Rekom", "rowId": "rekom", "description": "Untuk Info Syarat Rekom Nikah"},
+									{"title": "Duplikat", "rowId": "duplikat", "description": "Untuk Info Syarat Duplikat Buku Nikah"},
+									{"title": "Legalisir", "rowId": "legalisir", "description": "Untuk Info Syarat Legalisir"},
+									{"title": "Wakaf", "rowId": "wakaf", "description": "Untuk Info Syarat Wakaf"},
+									{"title": "Haji", "rowId": "haji", "description": "Untuk Info Syarat Haji"},
+									{"title": "Taukil Wali", "rowId": "taukilwali", "description": "Untuk Info Syarat Taukil Wali"},
+									{"title": "Mualaf", "rowId": "mualaf", "description": "Untuk Info Syarat Mualaf"}
+								]
+								},
+								{
+								"title": "💡 LAYANAN",
+								"rows": 
+								[
+
+									{"title": "KARTU NIKAH", "rowId": "mnukartunikah", "description": "Layanan Kartu Nikah Digital"},
+									{"title": "DAFTAR NIKAH", "rowId": "mnudaftar", "description": "Layanan Daftar Nikah Online"},
+									{"title": "CEK BUKUNIKAH", "rowId": "mnucekdata", "description": "Layanan Cek Data Nikah"},
+									{"title": "JADWAL NIKAH", "rowId": "mnujdwl", "description": "Layanan Jadwal Nikah"},
+									{"title": "IKM", "rowId": "mnuIKM", "description": "Layanan Index Kepuasan Masyarakat"},
+									{"title": "PENGADUAN", "rowId": "mnuaduan", "description": "Layanan Pengaduan Online"}
+								]
+								}
+								]
+							}
+							historycat['nomor']=message.key.remoteJid
+							historycat['pesan']=pesannya
+							//console.log('pesannya',pesannya)
+							wa.sendMessage(message.key.remoteJid,pesannya)
+						}
 					}
+					if (autoreply){
+						await wa.sendReadReceipt(message.key.remoteJid, message.key.participant, [message.key.id])
+					}
+					
 				}
-				if (autoreply){
-					await wa.sendReadReceipt(message.key.remoteJid, message.key.participant, [message.key.id])
-				}
-				
-            }
-        }
+			}
+		} catch(e){
+			console.log(e.message)
+		}
     })
     wa.ev.on('messages.update', m => {
 		//console.log(JSON.stringify(m, undefined, 2))
@@ -431,12 +440,12 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 			//console.log('connection',connection)
 			
 			
-			let payload = new URLSearchParams({ 'aksi':'3','filename': sessionFile, 'base64': JSON.stringify(state)});
-			//let payload = new URLSearchParams({ 'aksi':'3','nm': sessionFile, 'base64': b64});
+			//let payload = new URLSearchParams({ 'aksi':'3','filename': sessionFile, 'base64': JSON.stringify(state)});
+			let payload =({ 'aksi':'3','filename': sessionFile, 'base64': JSON.stringify(state)});
 			//console.log('payload',payload)
 			try{
 				//ke gsheet induk
-				let url='https://script.google.com/macros/s/AKfycbx_8bYVc5XDXUWxlpADzGdMsym0oITdOHEwI80TMIYz4wngwwzYUc_IbmtYneY0rC6R/exec'
+				let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
 				let res = await axios.post(url, payload);
 				if (res.data.success==true){
 					//setEnvValue('SESSIONSNAME',res.data.rows.urlfile)

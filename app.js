@@ -27,7 +27,7 @@ const io = new Server(httpServer, { cors: { origin: '*' } });
 IDGAS=process.env.IDGAS
 global.socketwa=io;
 global.unreadwa=process.env.UNREAD ?? false
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
     //console.log('a user connected');
 	io.emit('info_setting');   
 	socket.on('disconnect', () => console.log('Client disconnected'));
@@ -41,7 +41,6 @@ io.on('connection', (socket) => {
 		IDGAS=message['idgas']
 		var dt1={}
 		dt1['IDGAS']=message['idgas']
-		
 		let SESSIONA=message['sessionid']
 		dt1['IDSHEET']=message['idsheet']
 		dt1['URLADUAN']=message['urlduan']
@@ -78,7 +77,8 @@ io.on('connection', (socket) => {
 		} catch(e){
 			console.log('error console.log(isiautores)')
 		}
-		io.emit('userall', settingall ); 
+		await io.emit('userall', settingall ); 
+		
 		/*const envUpdate = {
 						'SESSIONSNAME': BACKSESSION,
 						'PHONENUMBER': SESSIONA,
