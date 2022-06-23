@@ -369,15 +369,15 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								"rows": 
 								[
 
-									{"title": "NIKAH", "rowId": "nikah", "description": "Untuk Info Syarat Nikah"},
-									{"title": "RUJUK", "rowId": "rujuk", "description": "Untuk Info Syarat Rujuk"},
-									{"title": "Rekom", "rowId": "rekom", "description": "Untuk Info Syarat Rekom Nikah"},
-									{"title": "Duplikat", "rowId": "duplikat", "description": "Untuk Info Syarat Duplikat Buku Nikah"},
-									{"title": "Legalisir", "rowId": "legalisir", "description": "Untuk Info Syarat Legalisir"},
-									{"title": "Wakaf", "rowId": "wakaf", "description": "Untuk Info Syarat Wakaf"},
-									{"title": "Haji", "rowId": "haji", "description": "Untuk Info Syarat Haji"},
-									{"title": "Taukil Wali", "rowId": "taukilwali", "description": "Untuk Info Syarat Taukil Wali"},
-									{"title": "Mualaf", "rowId": "mualaf", "description": "Untuk Info Syarat Mualaf"}
+									{"title": "❤️ NIKAH", "rowId": "nikah", "description": "Untuk Info Syarat Nikah"},
+									{"title": "🤝 RUJUK", "rowId": "rujuk", "description": "Untuk Info Syarat Rujuk"},
+									{"title": "📝 Rekom", "rowId": "rekom", "description": "Untuk Info Syarat Rekom Nikah"},
+									{"title": "📑 Duplikat", "rowId": "duplikat", "description": "Untuk Info Syarat Duplikat Buku Nikah"},
+									{"title": "💯 Legalisir", "rowId": "legalisir", "description": "Untuk Info Syarat Legalisir"},
+									{"title": "🎁 Wakaf", "rowId": "wakaf", "description": "Untuk Info Syarat Wakaf"},
+									{"title": "🕋 Haji", "rowId": "haji", "description": "Untuk Info Syarat Haji"},
+									{"title": "🤲 Taukil Wali", "rowId": "taukilwali", "description": "Untuk Info Syarat Taukil Wali"},
+									{"title": "👳‍ Mualaf", "rowId": "mualaf", "description": "Untuk Info Syarat Mualaf"}
 								]
 								},
 								{
@@ -385,12 +385,12 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								"rows": 
 								[
 
-									{"title": "KARTU NIKAH", "rowId": "mnukartunikah", "description": "Layanan Kartu Nikah Digital"},
-									{"title": "DAFTAR NIKAH", "rowId": "mnudaftar", "description": "Layanan Daftar Nikah Online"},
-									{"title": "CEK BUKUNIKAH", "rowId": "mnucekdata", "description": "Layanan Cek Data Nikah"},
-									{"title": "JADWAL NIKAH", "rowId": "mnujdwl", "description": "Layanan Jadwal Nikah"},
-									{"title": "IKM", "rowId": "mnuIKM", "description": "Layanan Index Kepuasan Masyarakat"},
-									{"title": "PENGADUAN", "rowId": "mnuaduan", "description": "Layanan Pengaduan Online"}
+									{"title": "💳 KARTU NIKAH", "rowId": "mnukartunikah", "description": "Layanan Kartu Nikah Digital"},
+									{"title": "✍️ DAFTAR NIKAH", "rowId": "mnudaftar", "description": "Layanan Daftar Nikah Online"},
+									{"title": "🔎 CEK BUKUNIKAH", "rowId": "mnucekdata", "description": "Layanan Cek Data Nikah"},
+									{"title": "📆 JADWAL NIKAH", "rowId": "mnujdwl", "description": "Layanan Jadwal Nikah"},
+									{"title": "💚 IKM", "rowId": "mnuIKM", "description": "Layanan Index Kepuasan Masyarakat"},
+									{"title": "🗣 PENGADUAN", "rowId": "mnuaduan", "description": "Layanan Pengaduan Online"}
 								]
 								}
 								]
