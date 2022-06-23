@@ -185,11 +185,8 @@ const createSessionP = async (sessionId, isLegacy = false, res = null) => {
 }
 const createSession = async (sessionId, isLegacy = false, res = null) => {
     const sessionFile = (isLegacy ? 'legacy_' : 'md_') + sessionId
-
     const logger = pino({ level: 'warn' })
-	
     const store = makeInMemoryStore({ logger })
-	
     const { state, saveState } = isLegacy
         ? useSingleFileLegacyAuthState(sessionsDir(sessionFile))
         : useSingleFileAuthState(sessionsDir(sessionFile))
@@ -208,7 +205,6 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
      * @type {import('@adiwajshing/baileys').AnyWASocket}
      */
     const wa = isLegacy ? makeWALegacySocket(waConfig) : makeWASocket.default(waConfig)
-
     if (!isLegacy) {
         store.readFromFile(sessionsDir(`${sessionId}_store`))
         store.bind(wa.ev)
@@ -265,6 +261,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 					}
 				} else {
 					//console.log(isiautores)
+					
 					var rta =[]
 					try{
 						var rta =  isiautores.filter(it => it.KEYWORD === isipesan.toUpperCase());
@@ -278,42 +275,49 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 							{index: 3, urlButton: {displayText: '📍 REVIEW KAMI', url: params['FOOTER']}},
 							//{index: 4, quickReplyButton: {displayText: 'This is a reply,\nhttps://forms.gle/BrptPEp652YxYWRb7 ', id: 'id-like-buttons-message'}},
 						]
-					
+					if (!params['HOME']||!params['HEADER']){
+								let payload = new URLSearchParams({ 'aksi':'12','session': sessionId});
+								try{
+									//console.log(payload)
+									let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
+									let res = await axios.post(url, payload);
+									//console.log(res.data.rows[0])
+									if (res.data.success==true){
+										
+										params=(res.data.rows[0])
+										params['HEADER']=res.data.rows[0]['URLLOGOWA']
+									}
+								} catch(e){}
+							}
 					if (rta.length>0){
 						const templateButtons = [
 								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
 							]
 						let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
-						historycat['nomor']=message.key.remoteJid
-						historycat['pesan']=pesannya
-						//console.log('pesannya',pesannya)
 						wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
-					} else {
-						
+					} else {						
 						if (isipesan=='mnuIKM'){
 							const buttons = [
 							  {buttonId: 'id1', buttonText: {displayText: '🤩 Sangat Bagus'}, type: 1},
 							  {buttonId: 'id2', buttonText: {displayText: '😍 Bagus'}, type: 1},
 							  {buttonId: 'id3', buttonText: {displayText: '😊 Biasa saja'}, type: 1},
-							  {buttonId: 'id4', buttonText: {displayText: '😱 Kurang Bagus'}, type: 1}
+							  {buttonId: 'id4', buttonText: {displayText: '😱 Kurang Bagus'}, type: 1},
+							  {buttonId: 'id5', buttonText: {displayText: '🔰 Menu Utama'}, type: 1}
 							]
-						
 							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":params['FOOTER'],"buttons":buttons}
 							wa.sendMessage(message.key.remoteJid,pesannya)
 						} else if (isipesan=='id1'||isipesan=='id2'||isipesan=='id3'||isipesan=='id4'){
 							const templateButtons = [
 								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-							]
-						
+							]						
 							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"🙏 Terima kasih, atas partisipasi anda dalam IKM KUA Kami.","footer":params['FOOTER'],"templateButtons":templateButtons}
 							//console.log(pesannya)
 							wa.sendMessage(message.key.remoteJid,pesannya)
 						} else if (isipesan=='mnudaftar'){
 							const templateButtons = [
 								{index: 1, urlButton: {displayText: 'Daftar Nikah', url: 'https://simkah.kemenag.go.id/daftarnikah/create'}},
-								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
+								{index: 2, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
 							]
-						
 							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk Daftar Nikah secara online silahkan kunjungi link berikut https://simkah.kemenag.go.id/daftarnikah/create atau klik tombol Daftar Nikah dibawah ini","footer":params['FOOTER'],"templateButtons":templateButtons}
 							//console.log(pesannya)
 							wa.sendMessage(message.key.remoteJid,pesannya)
@@ -321,8 +325,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 							const templateButtons = [
 								{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
 								{index: 2, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-							]
-						
+							]						
 							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengajukan pengaduan, silahkan isi form berikut ini "+params['URLADUAN']+" atau klik link dibawah ini..","footer":params['FOOTER'],"templateButtons":templateButtons}
 							//console.log(pesannya)
 							wa.sendMessage(message.key.remoteJid,pesannya)
@@ -330,8 +333,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 							const templateButtons = [
 								//{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
 								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-							]
-						
+							]						
 							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Silahkan ketik *BN#[nomor seri porporasi buku nikah anda]*\n\ncontoh: *BN#JT12XXXXX*","footer":params['FOOTER'],"templateButtons":templateButtons}
 							//console.log(pesannya)
 							wa.sendMessage(message.key.remoteJid,pesannya)
@@ -339,8 +341,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 							const templateButtons = [
 								//{index: 1, urlButton: {displayText: '🔙 Kembali', url: ""mnuback}},
 								{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
-							]
-						
+							]						
 							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengetahui riwayat pernikahan anda ketik *BIN#[nama anda]#[ nama orang tua laki-laki]*\n\ncontoh :\n*BIN#siti aminah#Joko Suparto*","footer":params['FOOTER'],"templateButtons":templateButtons}
 							//console.log(pesannya)
 							wa.sendMessage(message.key.remoteJid,pesannya)
@@ -351,23 +352,12 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 							]
 						
 							let pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengetahui jadwal nikah KUA kami, ketik *NC#[tanggal akad tanggal/bulan/tahun]*\n\ncontoh:\n*NC#01/02/2022*","footer":params['FOOTER'],"templateButtons":templateButtons}
-							//console.log(pesannya)
+							console.log(pesannya)
 							wa.sendMessage(message.key.remoteJid,pesannya)
 						} else {
 							/*let rta =  isiautores.filter(it => it.KEYWORD === 'INFO');*/
 							//console.log('params->',params)
-							if (!params){
-								let payload = new URLSearchParams({ 'aksi':'12','session': message['sessionid']});
-								try{
-									//ke gsheet induk
-									let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
-									let res = await axios.post(url, payload);
-									console.log(res)
-									if (res.data.success==true){
-										params=(res.data.rows)
-									}
-								} catch(e){}
-							}
+							
 							let pesannya={
 							  "text": params['HOME'],
 							  "footer": params['FOOTER'],
@@ -405,16 +395,19 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								}
 								]
 							}
-							historycat['nomor']=message.key.remoteJid
-							historycat['pesan']=pesannya
-							//console.log('pesannya',pesannya)
+							//console.log(pesannya)
 							wa.sendMessage(message.key.remoteJid,pesannya)
 						}
 					}
 					if (autoreply){
 						await wa.sendReadReceipt(message.key.remoteJid, message.key.participant, [message.key.id])
 					}
-					
+					var hitcat={}
+					hitcat['nomor']=message.key.remoteJid
+					hitcat['pesan']=isipesan
+					hitcat['time']=new Date()
+					historycat.push(hitcat)
+					//console.log('historycat->',historycat)
 				}
 			}
 		} catch(e){
@@ -422,13 +415,10 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 		}
     })
     wa.ev.on('messages.update', m => {
-		//console.log(JSON.stringify(m, undefined, 2))
-	
+		//console.log(JSON.stringify(m, undefined, 2))	
 	})
-	wa.ev.on('chats.update', m => {
-		
+	wa.ev.on('chats.update', m => {	
 		//console.log(m)
- 
 	})
     wa.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update
@@ -438,8 +428,6 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
         if (connection === 'open') {
             retries.delete(sessionId)
 			//console.log('connection',connection)
-			
-			
 			//let payload = new URLSearchParams({ 'aksi':'3','filename': sessionFile, 'base64': JSON.stringify(state)});
 			let payload =({ 'aksi':'3','filename': sessionFile, 'base64': JSON.stringify(state)});
 			//console.log('payload',payload)
