@@ -1,6 +1,6 @@
 {
   "name": "baileys-api",
-  "description": "Simple RESTful WhatsApp API",
+  "description": "API WhatsApp CENTER KUA",
   "private": true,
   "main": "app.js",
   "type": "module",
