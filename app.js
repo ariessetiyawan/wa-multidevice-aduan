@@ -1,5 +1,3 @@
-'use strict';
-
 import 'dotenv/config'
 import express from 'express'
 import nodeCleanup from 'node-cleanup'
