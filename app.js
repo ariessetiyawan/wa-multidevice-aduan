@@ -26,13 +26,13 @@ const hss =await bacaAllAReply()
 
 const listenerCallback = () => {
     init()
-    console.log(`Server is listening on http://${host ? host : 'localhost'}:${port}`)
+    //console.log(`Server is listening on http://${host ? host : 'localhost'}:${port}`)
 }
 
 if (host) {
-    app.listen(port, host, listenerCallback)
+    app.listen( host, listenerCallback)
 } else {
-    app.listen(port, listenerCallback)
+    app.listen( listenerCallback)
 }
 
 nodeCleanup(cleanup)
