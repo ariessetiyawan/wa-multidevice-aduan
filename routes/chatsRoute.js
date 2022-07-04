@@ -4,8 +4,12 @@ import requestValidator from './../middlewares/requestValidator.js'
 import sessionValidator from './../middlewares/sessionValidator.js'
 import * as controller from './../controllers/chatsController.js'
 import getMessages from './../controllers/getMessages.js'
+import getAutoreply from './../controllers/getAutoreply.js'
 
 const router = Router()
+
+
+router.post('/auto-reply',  body('idgas').notEmpty(), body('sessionid').notEmpty(),requestValidator, getAutoreply)
 
 router.get('/', query('id').notEmpty(), requestValidator, sessionValidator, controller.getList)
 
