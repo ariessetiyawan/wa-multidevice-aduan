@@ -6,7 +6,7 @@ import { init, cleanup,bacaAllUser,bacaAllAReply,kirimpesanTL } from './whatsapp
 import cors from 'cors'
 import axios from 'axios'
 const app = express()
-const host = '127.0.0.1'
+const host = '0.0.0.0'
 const port = 8001
 
 global.historycat=[]
@@ -31,9 +31,9 @@ const listenerCallback = () => {
 }
 
 if (host) {
-    app.listen(port, host, listenerCallback)
+    app.listen( host, listenerCallback)
 } else {
-    app.listen(port, listenerCallback)
+    app.listen(listenerCallback)
 }
 
 nodeCleanup(cleanup)
