@@ -90,11 +90,9 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 
     // Automatically read incoming messages, uncomment below codes to enable this behaviour
     
-    wa.ev.on('messages.upsert', async (m) => {
-       
+    wa.ev.on('messages.upsert', async (m) => {     
         try{
 			const message = m.messages[0]
-			
 			
 			if (!message.key.fromMe && m.type === 'notify') {
 				await delay(500)
@@ -114,9 +112,11 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 							params['TITLE']=''
 							params['IDGAS']=''
 							params['AUTOREPLY']=''
+							params['AUTOINFO']=''
 							var usra=settingall.data.rows.filter(it => it.SESSION === sessionId);
-							//console.log(usra)
+							//console.log(usra.length)
 							if (usra.length>0){
+								
 								params['HOME']=usra[0]['HOME']
 								params['HEADER']=usra[0]['URLLOGOWA']
 								params['URLADUAN']=usra[0]['URLADUAN']
@@ -124,7 +124,10 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								params['TITLE']=usra[0]['TITLE']
 								params['IDGAS']=usra[0]['IDGAS']
 								params['AUTOREPLY']=usra[0]['AUTOREPLY']
-								autoreply=parseInt(params['AUTOREPLY'])
+								params['AUTOINFO']=usra[0]['AUTOINFO']
+								autoreply=(params['AUTOREPLY'])
+								autoinfo=(params['AUTOINFO'])
+								//console.log('autoreply '+sessionId+'->',autoreply)
 							}
 							var rta1=isiautores.filter(it => it.sessionId === sessionId);
 							//console.log(JSON.stringify(rta1[0]['rows']))
@@ -145,14 +148,12 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								  }
 								var rta =  rta1[0]['rows'].filter(it => it.KEYWORD === isipesan.toUpperCase());
 								//console.log(JSON.stringify(rta))
-							} else {
-								autoreply=1
-							}
+							} 
 							
 						} catch(e){
 							var rta =[]
 						}
-						//console.log('autoreply ->',autoreply)
+						//console.log('autoreply '+sessionId+'->',autoreply)
 						if (autoreply==1){
 							var pesannya={
 									  "text": params['HOME'],
@@ -216,7 +217,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 										{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
 									]
 								pesannya['text']=rta[0]['DESKRIPSI']
-								//var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
+								var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
 								wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
 							} else {						
 								if (isipesan=='mnuIKM'){
@@ -225,9 +226,17 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									  {buttonId: 'id2', buttonText: {displayText: '😍 Bagus'}, type: 1},
 									  {buttonId: 'id3', buttonText: {displayText: '😊 Biasa saja'}, type: 1},
 									  {buttonId: 'id4', buttonText: {displayText: '😱 Kurang Bagus'}, type: 1},
-									  {buttonId: 'id5', buttonText: {displayText: '🔰 Menu Utama'}, type: 1}
+									  {buttonId: 'id5', buttonText: {displayText: '🔰 Menu Utama'}, type: 0}
 									]
-									var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":params['FOOTER'],"buttons":buttons}
+									const templateButtons = [
+										{index: 1, quickReplyButton: {displayText: '🤩 Sangat Bagus', id: 'id4'}},
+										{index: 2, quickReplyButton: {displayText: '😍 Bagus', id: 'id3'}},
+										{index: 3, quickReplyButton: {displayText: '😊 Biasa saja', id: 'id2'}}
+																	
+
+									]
+									var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},
+									"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":params['FOOTER'],"buttons":buttons}
 									wa.sendMessage(message.key.remoteJid,pesannya)
 								} else if (isipesan=='id1'||isipesan=='id2'||isipesan=='id3'||isipesan=='id4'){
 									const templateButtons = [
@@ -265,7 +274,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 										//{index: 1, urlButton: {displayText: '🔙 Kembali', url: ""mnuback}},
 										{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
 									]						
-									//var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption""Untuk mengetahui riwayat pernikahan anda ketik *BIN#[nama anda]#[ nama orang tua laki-laki]*\n\ncontoh :\n*BIN#siti aminah#Joko Suparto*","footer":params['FOOTER'],"templateButtons":templateButtons}
+									//var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengetahui riwayat pernikahan anda ketik *BIN#[nama anda]#[ nama orang tua laki-laki]*\n\ncontoh :\n*BIN#siti aminah#Joko Suparto*","footer":params['FOOTER'],"templateButtons":templateButtons}
 									pesannya['text']="Untuk mengetahui riwayat pernikahan anda ketik *BIN#[nama anda]#[ nama orang tua laki-laki]*\n\ncontoh :\n*BIN#siti aminah#Joko Suparto*"
 									wa.sendMessage(message.key.remoteJid,pesannya)
 								} else if (isipesan=='mnujdwl'){
@@ -284,17 +293,18 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									
 									//console.log(pesannya)
 									try{
-										
-										var toj=message.key.remoteJid
-										let resut = toj.includes("broadcast")
-										//console.log(resut)
-										if (resut==false){
-											if (pesannya){
-												wa.sendMessage(message.key.remoteJid,pesannya)
+										if (autoinfo==1){
+											var toj=message.key.remoteJid
+											let resut = toj.includes("broadcast")
+											//console.log(resut)
+											if (resut==false){
+												if (pesannya){
+													wa.sendMessage(message.key.remoteJid,pesannya)
+												}
+											} else {
+												console.log('message.key.remoteJid ->',message.key.remoteJid)
+												console.log('broadcast message ',message.key.participant)
 											}
-										} else {
-											console.log('message.key.remoteJid ->',message.key.remoteJid)
-											console.log('broadcast message ',message.key.participant)
 										}
 									}catch(e){}
 								}
@@ -451,22 +461,8 @@ const formatGroup = (group) => {
 }
 
 const cleanup = async () => {
-	try{
-		var API_TOKEN_BOT ='322468321:AAEyRedHR0vSF9AbNJLLINB63QSgy8qDv50';
-		var pesan='Server WA CENTER Shutdown !'
-        var payload = {
-          'method': 'sendMessage',
-          'chat_id': '186037981',
-          'parse_mode' : 'HTML',
-        }
-      
-        payload['text']=  pesan;
-		var err =await axios.post('https://api.telegram.org/bot' + API_TOKEN_BOT + '/', payload);  
-	} catch(e){
-		console.log(`Error on Message cleanup to telegram :${e}`)
-	}
+	const hss1 =await kirimpesanTL()
     console.log('Running cleanup before exit.')
-	
     sessions.forEach((session, sessionId) => {
         if (!session.isLegacy) {
             session.store.writeToFile(sessionsDir(`${sessionId}_store.json`))
@@ -493,7 +489,6 @@ const init = () => {
         }
     })
 }
-
 const bacaautoresponse = async(idg)=>{
 	var res=[]
 	try{
@@ -507,14 +502,26 @@ const bacaautoresponse = async(idg)=>{
 	return res
 	//console.log(res)
 }
-
-const bacaAllUser = async()=>{
+const kirimpesanTL = async()=>{
 	var res=[]
 	try{
 		var res=[]
-		let payload=new URLSearchParams({"aksi":"12","session":"%"})
+		let payload=new URLSearchParams({"aksi":"TOTL"})
 		let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
 		res = await axios.post(url,payload);
+	} catch(error){
+		var res=[]
+	}
+	return res
+}
+const bacaAllUser = async(dt)=>{
+	var res=[]
+	try{
+		var res=[]
+		let payload=new URLSearchParams({"aksi":"12","session":dt})
+		let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
+		res = await axios.post(url,payload);
+		//console.log(res)
 	} catch(error){
 		var res=[]
 	}
@@ -535,6 +542,7 @@ const bacaAllAReply = async()=>{
 	//console.log(res)
 }
 export {
+	kirimpesanTL,
 	bacaAllAReply,
 	bacaAllUser,
 	bacaautoresponse,

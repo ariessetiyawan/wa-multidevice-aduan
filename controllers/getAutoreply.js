@@ -8,8 +8,10 @@ const getAutoreply = async (req, res) => {
 		const sessionid = req.body.sessionid
 		
 		let dtx = await bacaautoresponse(idgas)
+		//console.log(dtx)
 		if (dtx){
 			var dt={"sessionId":sessionid,"rows":dtx.data.rows}
+			//console.log(dt)
 			let idr =isiautores.filter(it => it.sessionId === sessionid);
 			if (idr.length>0){
 				for( var i = 0; i < isiautores.length; i++){ 
