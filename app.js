@@ -31,9 +31,9 @@ const listenerCallback = () => {
 }
 
 if (host) {
-    app.listen( host, listenerCallback)
+    app.listen(port, host, listenerCallback)
 } else {
-    app.listen(listenerCallback)
+    app.listen(port, listenerCallback)
 }
 
 nodeCleanup(cleanup)
