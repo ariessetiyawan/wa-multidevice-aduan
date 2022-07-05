@@ -6,8 +6,8 @@ import { init, cleanup,bacaAllUser,bacaAllAReply,kirimpesanTL } from './whatsapp
 import cors from 'cors'
 import axios from 'axios'
 const app = express()
-const host = process.env.HOST || undefined
-const port = parseInt(process.env.PORT ?? 8000)
+const host = process.env.HOST || 127.0.0.1
+const port = parseInt(process.env.PORT || 8001)
 
 global.historycat=[]
 global.isiautores=[]
