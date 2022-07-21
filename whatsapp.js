@@ -114,11 +114,14 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 							params['AUTOREPLY']=''
 							params['AUTOINFO']=''
 							var usra=settingall.data.rows.filter(it => it.SESSION === sessionId);
-							//console.log(usra.length)
+							//console.log('settingall '+sessionId+'->',settingall)
 							if (usra.length>0){
-								
+								if (usra[0]['URLLOGOWA']==null||usra[0]['URLLOGOWA']==undefined||usra[0]['URLLOGOWA']==''){
+								    params['HEADER']='1WCuMrY3jNCO1okoEFHTs-FtCf6Xy-OkN'
+								} else {
+									params['HEADER']=usra[0]['URLLOGOWA']
+								}
 								params['HOME']=usra[0]['HOME']
-								params['HEADER']=usra[0]['URLLOGOWA']
 								params['URLADUAN']=usra[0]['URLADUAN']
 								params['FOOTER']=usra[0]['FOOTER']
 								params['TITLE']=usra[0]['TITLE']
@@ -128,9 +131,31 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								autoreply=(params['AUTOREPLY'])
 								autoinfo=(params['AUTOINFO'])
 								//console.log('autoreply '+sessionId+'->',autoreply)
+							} else {
+								
 							}
-							var rta1=isiautores.filter(it => it.sessionId === sessionId);
-							//console.log(JSON.stringify(rta1[0]['rows']))
+							//console.log('isiautores->',isiautores)
+							var rta1=[]
+							if (isiautores.length>0){
+								var rta1=isiautores.filter(it => it.sessionId === sessionId);
+								//console.log('isiautores->',JSON.stringify(rta1[0]['rows']))
+							} else {
+								let payload = new URLSearchParams({ 'aksi':'GAURES','session': sessionId});
+										try{
+											let url='https://script.google.com/macros/s/'+params['IDGAS']+'/exec'
+											let res = await axios.post(url, payload);
+											
+											if (res.data.success==true){
+												var dtss={}
+												dtss['sessionId']=sessionId
+												dtss['rows']=res.data.rows
+												isiautores.push(dtss)
+												var rta1=isiautores.filter(it => it.sessionId === sessionId);
+												//console.log('isiautores->',isiautores)
+												
+											}
+										} catch(e){}
+							}
 							if (rta1.length>0){
 								var isipesan=''
 								  if (message.message.hasOwnProperty('extendedTextMessage')){
@@ -147,7 +172,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									isipesan=''
 								  }
 								var rta =  rta1[0]['rows'].filter(it => it.KEYWORD === isipesan.toUpperCase());
-								//console.log(JSON.stringify(rta))
+								//console.log('autoreply->',JSON.stringify(rta))
 							} 
 							
 						} catch(e){
@@ -206,7 +231,6 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 											let res = await axios.post(url, payload);
 											
 											if (res.data.success==true){
-												
 												params=(res.data.rows[0])
 												params['HEADER']=res.data.rows[0]['URLLOGOWA']
 											}
@@ -217,30 +241,36 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 										{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
 									]
 								pesannya['text']=rta[0]['DESKRIPSI']
-								var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
+								if (params['HEADER']==null||params['HEADER']==undefined||params['HEADER']==''){
+								    var fotohead='1WCuMrY3jNCO1okoEFHTs-FtCf6Xy-OkN'
+									params['HEADER']=fotohead
+								} else {
+									var fotohead=params['HEADER']
+								}
+								var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+fotohead},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
+								//console.log('pesannya '+sessionId+'->',pesannya)
 								wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
 							} else {						
 								if (isipesan.toUpperCase()=='MENU'||isipesan.toUpperCase()=='INFO'){
 									if (pesannya){
 										wa.sendMessage(message.key.remoteJid,pesannya)
 									}
-								} else if (isipesan=='mnuIKM'){
+								} else if (isipesan=='mnuIKM'||isipesan.toUpperCase()=='IKM'){
 									const buttons = [
-									  {buttonId: 'id1', buttonText: {displayText: '🤩 Sangat Bagus'}, type: 1},
-									  {buttonId: 'id2', buttonText: {displayText: '😍 Bagus'}, type: 1},
-									  {buttonId: 'id3', buttonText: {displayText: '😊 Biasa saja'}, type: 1},
-									  {buttonId: 'id4', buttonText: {displayText: '😱 Kurang Bagus'}, type: 1},
-									  {buttonId: 'id5', buttonText: {displayText: '🔰 Menu Utama'}, type: 0}
+									  {buttonId: 'id1', buttonText: {displayText: '🤩 Sangat Bagus'}, type: 0},
+									  {buttonId: 'id2', buttonText: {displayText: '😍 Bagus'}, type: 0},
+									  {buttonId: 'id3', buttonText: {displayText: '😊 Biasa saja'}, type: 0},
+									  {buttonId: 'id4', buttonText: {displayText: '😱 Kurang Bagus'}, type: 0},
 									]
 									const templateButtons = [
 										{index: 1, quickReplyButton: {displayText: '🤩 Sangat Bagus', id: 'id4'}},
 										{index: 2, quickReplyButton: {displayText: '😍 Bagus', id: 'id3'}},
-										{index: 3, quickReplyButton: {displayText: '😊 Biasa saja', id: 'id2'}}
-																	
-
+										{index: 3, quickReplyButton: {displayText: '😊 Biasa saja', id: 'id2'}},
+										//{index: 4, urlButton: {displayText: '😱 Kurang Bagus', url: 'https://simkah.kemenag.go.id/daftarnikah/create'}},
+																
 									]
 									var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},
-									"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":params['FOOTER'],"buttons":buttons}
+									"caption":"Bantu kami, untuk menilai pelayanan kami. Agar kami bisa lebih baik dalam melayanai masyarakat penguna layanan KUA.","footer":params['FOOTER'],"buttons":buttons}//
 									wa.sendMessage(message.key.remoteJid,pesannya)
 								} else if (isipesan=='id1'||isipesan=='id2'||isipesan=='id3'||isipesan=='id4'){
 									const templateButtons = [
@@ -249,7 +279,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"🙏 Terima kasih, atas partisipasi anda dalam IKM KUA Kami.","footer":params['FOOTER'],"templateButtons":templateButtons}
 							
 									wa.sendMessage(message.key.remoteJid,pesannya)
-								} else if (isipesan=='mnudaftar'){
+								} else if (isipesan=='mnudaftar'||isipesan.toUpperCase()=='DAFTARNIKAH'){
 									const templateButtons = [
 										{index: 1, urlButton: {displayText: 'Daftar Nikah', url: 'https://simkah.kemenag.go.id/daftarnikah/create'}},
 										{index: 2, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
@@ -257,7 +287,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk Daftar Nikah secara online silahkan kunjungi link berikut https://simkah.kemenag.go.id/daftarnikah/create atau klik tombol Daftar Nikah dibawah ini","footer":params['FOOTER'],"templateButtons":templateButtons}
 									
 									wa.sendMessage(message.key.remoteJid,pesannya)
-								} else if (isipesan=='mnuaduan'){
+								} else if (isipesan=='mnuaduan'||isipesan.toUpperCase()=='PENGADUAN'){
 									const templateButtons = [
 										{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
 										{index: 2, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
@@ -265,7 +295,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengajukan pengaduan, silahkan isi form berikut ini "+params['URLADUAN']+" atau klik link dibawah ini..","footer":params['FOOTER'],"templateButtons":templateButtons}
 								
 									wa.sendMessage(message.key.remoteJid,pesannya)
-								} else if (isipesan=='mnukartunikah'){
+								} else if (isipesan=='mnukartunikah'||isipesan.toUpperCase()=='KARTUNIKAH'){
 									const templateButtons = [
 										//{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
 										{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
@@ -273,7 +303,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									//var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Silahkan ketik *BN#[nomor seri porporasi buku nikah anda]*\n\ncontoh: *BN#JT12XXXXX*","footer":params['FOOTER'],"templateButtons":templateButtons}
 									pesannya['text']="Silahkan ketik *BN#[nomor seri porporasi buku nikah anda]*\n\ncontoh: *BN#JT12XXXXX*"
 									wa.sendMessage(message.key.remoteJid,pesannya)
-								} else if (isipesan=='mnucekdata'){
+								} else if (isipesan=='mnucekdata'||isipesan.toUpperCase()=='BUKUNIKAH'){
 									const templateButtons = [
 										//{index: 1, urlButton: {displayText: '🔙 Kembali', url: ""mnuback}},
 										{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
@@ -281,7 +311,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									//var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk mengetahui riwayat pernikahan anda ketik *BIN#[nama anda]#[ nama orang tua laki-laki]*\n\ncontoh :\n*BIN#siti aminah#Joko Suparto*","footer":params['FOOTER'],"templateButtons":templateButtons}
 									pesannya['text']="Untuk mengetahui riwayat pernikahan anda ketik *BIN#[nama anda]#[ nama orang tua laki-laki]*\n\ncontoh :\n*BIN#siti aminah#Joko Suparto*"
 									wa.sendMessage(message.key.remoteJid,pesannya)
-								} else if (isipesan=='mnujdwl'){
+								} else if (isipesan=='mnujdwl'||isipesan.toUpperCase()=='JADWALNIKAH'){
 									const templateButtons = [
 										//{index: 1, urlButton: {displayText: 'Form Pengaduan', url: params['URLADUAN']}},
 										{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
@@ -532,6 +562,20 @@ const bacaAllUser = async(dt)=>{
 	return res
 	//console.log(res)
 }
+const bacaGroupUser = async(dt)=>{
+	var res=[]
+	try{
+		var res=[]
+		let payload=new URLSearchParams({"aksi":"GRP","group":dt})
+		let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
+		res = await axios.post(url,payload);
+		//console.log(res)
+	} catch(error){
+		var res=[]
+	}
+	return res
+	//console.log(res)
+}
 const bacaAllAReply = async()=>{
 	var res=[]
 	try{
@@ -547,6 +591,7 @@ const bacaAllAReply = async()=>{
 }
 export {
 	kirimpesanTL,
+	bacaGroupUser,
 	bacaAllAReply,
 	bacaAllUser,
 	bacaautoresponse,

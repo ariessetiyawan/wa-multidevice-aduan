@@ -2,7 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import nodeCleanup from 'node-cleanup'
 import routes from './routes.js'
-import { init, cleanup,bacaAllUser,bacaAllAReply,kirimpesanTL } from './whatsapp.js'
+import { init, cleanup,bacaAllUser,bacaAllAReply,kirimpesanTL,bacaGroupUser } from './whatsapp.js'
 import cors from 'cors'
 import axios from 'axios'
 const app = express()
@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use('/', routes)
 
-settingall=await bacaAllUser('HEROKU')
+settingall=await bacaGroupUser('HEROKU')
 const hss =await bacaAllAReply()
 
 const listenerCallback = () => {
