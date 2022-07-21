@@ -220,7 +220,11 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
 								wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
 							} else {						
-								if (isipesan=='mnuIKM'){
+								if (isipesan.toUpperCase()=='MENU'||isipesan.toUpperCase()=='INFO'){
+									if (pesannya){
+										wa.sendMessage(message.key.remoteJid,pesannya)
+									}
+								} else if (isipesan=='mnuIKM'){
 									const buttons = [
 									  {buttonId: 'id1', buttonText: {displayText: '🤩 Sangat Bagus'}, type: 1},
 									  {buttonId: 'id2', buttonText: {displayText: '😍 Bagus'}, type: 1},
