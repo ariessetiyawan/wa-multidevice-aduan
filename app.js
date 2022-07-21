@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use('/', routes)
 
-settingall=await bacaAllUser('%')
+settingall=await bacaAllUser('HEROKU')
 const hss =await bacaAllAReply()
 
 const listenerCallback = () => {
