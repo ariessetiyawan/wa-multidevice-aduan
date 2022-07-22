@@ -22,6 +22,7 @@ app.use(express.json())
 app.use('/', routes)
 
 settingall=await bacaGroupUser('HEROKU')
+console.log(settingall.data.rows)
 const hss =await bacaAllAReply()
 
 const listenerCallback = () => {

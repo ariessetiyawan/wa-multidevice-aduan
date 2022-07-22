@@ -19,7 +19,7 @@ router.post(
     controller.send
 )
 router.post('/auto-reply',  body('idgas').notEmpty(), body('sessionid').notEmpty(),requestValidator, getAutoreply)
-router.post('/usersetting', body('sessionid').notEmpty(),requestValidator, getUsersetting)
+router.post('/usersetting', body('idgas').notEmpty(),body('sessionid').notEmpty(),requestValidator, getUsersetting)
 router.get('/', query('id').notEmpty(), requestValidator, sessionValidator, controller.getList)
 
 router.get('/:jid', query('id').notEmpty(), requestValidator, sessionValidator, getMessages)

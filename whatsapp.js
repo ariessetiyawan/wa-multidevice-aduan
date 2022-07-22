@@ -569,9 +569,8 @@ const bacaGroupUser = async(dt)=>{
 		let payload=new URLSearchParams({"aksi":"GRP","group":dt})
 		let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
 		res = await axios.post(url,payload);
-		//console.log(res)
 	} catch(error){
-		var res=[]
+		console.log(res)
 	}
 	return res
 	//console.log(res)
@@ -589,8 +588,22 @@ const bacaAllAReply = async()=>{
 	return res
 	//console.log(res)
 }
+const bacaListMenu = async(idg)=>{
+	var res=[]
+	try{
+		var res=[]
+		let payload=new URLSearchParams({"aksi":"LM"})
+		let url='https://script.google.com/macros/s/'+idg+'/exec'
+		res = await axios.post(url,payload);
+		//console.log('list menu',res)
+	} catch(error){
+		var res=[]
+	}
+	return res
+}
 export {
 	kirimpesanTL,
+	bacaListMenu,
 	bacaGroupUser,
 	bacaAllAReply,
 	bacaAllUser,
