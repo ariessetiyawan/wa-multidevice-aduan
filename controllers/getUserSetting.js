@@ -5,8 +5,8 @@ const getUsersetting = async (req, res) => {
 	try{
 		const idgas = req.body.idgas
 		const sessionid = req.body.sessionid
-		settingall=await bacaGroupUser('HEROKU')
-		console.log('settingall',settingall.data.rows)
+		settingall=await bacaGroupUser('ALL')
+		//console.log('settingall',settingall.data.rows)
 		if (settingall.data.rows.length>0){
 			let idr =settingall.data.rows.filter(it => it.SESSION === sessionid);
 			if (idr.length>0){
@@ -22,7 +22,7 @@ const getUsersetting = async (req, res) => {
 						}
 					}
 					settingall.data.rows.push(newdt)
-					console.log('settingall',settingall.data.rows)
+					//console.log('settingall',settingall.data.rows)
 				}
 			}
 		}

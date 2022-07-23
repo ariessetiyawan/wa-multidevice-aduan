@@ -16,8 +16,7 @@ const getAutoreply = async (req, res) => {
 			if (idr.length>0){
 				for( var i = 0; i < isiautores.length; i++){ 
 					if ( isiautores[i]['sessionId'] === sessionid) { 
-						isiautores.splice(i, 1);
-						break;
+						isiautores.splice(i, 1); 
 					}
 				}
 			}
