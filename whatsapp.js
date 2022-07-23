@@ -181,7 +181,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								//console.log('params ->',params)
 							}
 							var rta1=isiautores.filter(it => it.sessionId === sessionId);
-							console.log('params ->',JSON.stringify(rta1.rows))
+							console.log('isiautores ->',JSON.stringify(rta1.rows))
 							if (rta1.length>0){
 								
 								  if (message.message.hasOwnProperty('extendedTextMessage')){
@@ -212,7 +212,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 										dtss['rows']=res.data.rows
 										isiautores.push(dtss)
 										var rta1=isiautores.filter(it => it.sessionId === sessionId);
-										//console.log('isiautores->',rta1)
+										console.log('isiautores->',rta1)
 										if (message.message.hasOwnProperty('extendedTextMessage')){
 											isipesan=message.message.extendedTextMessage.text
 										  } else if (message.message.hasOwnProperty('listResponseMessage')){
@@ -227,7 +227,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 											isipesan=''
 										}
 								
-								var rta =  rta1[0]['rows'].filter(it => it.KEYWORD === isipesan.toUpperCase());
+										var rta =  rta1[0]['rows'].filter(it => it.KEYWORD === isipesan.toUpperCase());
 									}
 								} catch(e){}
 							}
