@@ -118,6 +118,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 							var usra=settingall.data.rows.filter(it => it.SESSION === sessionId);
 							//console.log(sessionId)
 							//console.log(JSON.stringify(usra[0]['LISTMENU']))
+							var pesannya={}
 							if (usra.length>0){
 								params['HOME']=usra[0]['HOME']
 								params['HEADER']=usra[0]['URLLOGOWA']
@@ -127,6 +128,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								params['IDGAS']=usra[0]['IDGAS']
 								params['AUTOREPLY']=usra[0]['AUTOREPLY']
 								params['AUTOINFO']=usra[0]['AUTOINFO']
+								params['SENDTYPE']=usra[0]['SENDTYPE']
 								autoreply=(params['AUTOREPLY'])
 								autoinfo=(params['AUTOINFO'])
 								params['LISTMENU']=usra[0]['LISTMENU']
@@ -271,7 +273,10 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
 							} else {						
 								//console.log('isipesan->',isipesan)
-								if (isipesan=='mnuikm'||isipesan.toUpperCase()=='IKM'){
+								if (isipesan.toUpperCase()=='INFO'||isipesan.toUpperCase()=='mnuhome'||isipesan.toUpperCase()=='MENU'){
+									
+									wa.sendMessage(message.key.remoteJid,pesannya)
+								} else if (isipesan=='mnuikm'||isipesan.toUpperCase()=='IKM'){
 									const buttons = [
 									  {buttonId: 'id1', buttonText: {displayText: '🤩 Sangat Bagus'}, type: 1},
 									  {buttonId: 'id2', buttonText: {displayText: '😍 Bagus'}, type: 1},
@@ -314,7 +319,6 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 										{index: 2, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
 									]
 									var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":"Untuk Daftar Nikah secara online silahkan kunjungi link berikut https://simkah.kemenag.go.id/daftarnikah/create atau klik tombol Daftar Nikah dibawah ini","footer":params['FOOTER'],"templateButtons":templateButtons}
-									
 									wa.sendMessage(message.key.remoteJid,pesannya)
 								} else if (isipesan=='mnuaduan'||isipesan.toUpperCase()=='PENGADUAN'){
 									const templateButtons = [

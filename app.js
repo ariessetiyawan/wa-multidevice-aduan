@@ -22,7 +22,7 @@ app.use(express.json())
 app.use('/', routes)
 
 settingall=await bacaGroupUser('PARE')
-console.log(settingall.data.rows)
+//console.log(settingall.data.rows)
 const hss =await bacaAllAReply()
 
 const listenerCallback = () => {
