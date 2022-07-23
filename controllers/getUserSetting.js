@@ -5,7 +5,7 @@ const getUsersetting = async (req, res) => {
 	try{
 		const idgas = req.body.idgas
 		const sessionid = req.body.sessionid
-		settingall=await bacaGroupUser('ALL')
+		settingall=await bacaGroupUser('PARE')
 		//console.log('settingall',settingall.data.rows)
 		if (settingall.data.rows.length>0){
 			let idr =settingall.data.rows.filter(it => it.SESSION === sessionid);
