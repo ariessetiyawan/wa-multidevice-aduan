@@ -5,15 +5,14 @@ const getUsersetting = async (req, res) => {
 	try{
 		const idgas = req.body.idgas
 		const sessionid = req.body.sessionid
-        console.log('group',global.group)
 		settingall=await bacaGroupUser(global.group)
-		console.log('settingall',settingall.data.rows)
 		if (settingall.data.rows.length>0){
 			let idr =settingall.data.rows.filter(it => it.SESSION === sessionid);
 			if (idr.length>0){
 				var newdt={}
 				newdt=(idr[0])
 				let dtx=await bacaListMenu(idgas)
+                console.log('dtx',dtx)
 				if (dtx.data.rows.length>0){					
 					newdt['LISTMENU']=(dtx.data.rows)
 					for( var i = 0; i < settingall.data.rows.length; i++){ 
