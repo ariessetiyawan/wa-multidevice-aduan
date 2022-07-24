@@ -742,6 +742,7 @@ const bacaListMenu = async(idg)=>{
 		res = await axios.post(url,payload);
 		console.log('list menu',res)
 	} catch(error){
+        console.log('list menu',error.message)
 		var res=[]
 	}
 	return res
