@@ -8,6 +8,7 @@ import axios from 'axios'
 const app = express()
 const host = process.env.HOST ?? '0.0.0.0'
 const port = parseInt(process.env.PORT ?? 8001)
+const group = process.env.GROUP ?? 'ALL'
 
 global.historycat=[]
 global.isiautores=[]
@@ -21,7 +22,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use('/', routes)
 
-settingall=await bacaGroupUser('PARE')
+settingall=await bacaGroupUser(group)
 //console.log(settingall.data.rows)
 const hss =await bacaAllAReply()
 
