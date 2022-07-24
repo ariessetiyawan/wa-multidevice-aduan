@@ -181,7 +181,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								//console.log('params ->',params)
 							}
 							var rta1=isiautores.filter(it => it.sessionId === sessionId);
-							console.log('isiautores ->',JSON.stringify(rta1.rows))
+							//.log('isiautores ->',JSON.stringify(rta1.rows))
 							if (rta1.length>0){
 								
 								  if (message.message.hasOwnProperty('extendedTextMessage')){
@@ -212,7 +212,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 										dtss['rows']=res.data.rows
 										isiautores.push(dtss)
 										var rta1=isiautores.filter(it => it.sessionId === sessionId);
-										console.log('isiautores->',rta1)
+										//console.log('isiautores->',rta1)
 										if (message.message.hasOwnProperty('extendedTextMessage')){
 											isipesan=message.message.extendedTextMessage.text
 										  } else if (message.message.hasOwnProperty('listResponseMessage')){
@@ -243,7 +243,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									  "buttonText": "Pilih Menu",  
 									  "sections":params['LISTMENU']
 									}
-							console.log(JSON.stringify(pesannya))
+							//console.log(JSON.stringify(pesannya))
 							const templateButtons = [
 								//{index: 1, urlButton: {displayText: '👍 IKM KUA', url: 'https://github.com/adiwajshing/Baileys'}},
 								{index: 2, quickReplyButton: {displayText: '👍 IKM KUA', id: 'id_IKM'}},
@@ -272,7 +272,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
 								wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
 							} else {						
-								console.log('isipesan->',isipesan)
+								//console.log('isipesan->',isipesan)
 								if (isipesan.toUpperCase()=='INFO'||isipesan.toUpperCase()=='mnuhome'||isipesan.toUpperCase()=='MENU'){
 									
 									wa.sendMessage(message.key.remoteJid,pesannya)
