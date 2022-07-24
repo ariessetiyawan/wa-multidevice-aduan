@@ -737,10 +737,11 @@ const bacaListMenu = async(idg)=>{
 	try{
 		var res=[]
 		let payload=new URLSearchParams({"aksi":"LM"})
+        let payload1=({"aksi":"LM"})
 		let url='https://script.google.com/macros/s/'+idg+'/exec'
         console.log('url list menu',url)
-        console.log('payload',payload)
-		res = await axios.post(url,payload);
+        console.log('payload',payload1)
+		res = await axios.post(url,payload1);
 		console.log('list menu',res)
 	} catch(error){
         console.log('list menu',error.message)
