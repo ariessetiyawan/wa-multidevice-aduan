@@ -8,7 +8,6 @@ import axios from 'axios'
 const app = express()
 const host = process.env.HOST ?? '0.0.0.0'
 const port = parseInt(process.env.PORT ?? 8001)
-const group = process.env.GROUP ?? 'ALL'
 
 global.historycat=[]
 global.isiautores=[]
@@ -17,6 +16,8 @@ global.params={}
 global.autoreply=0
 global.autoinfo=0
 global.unreadwa=process.env.UNREAD ?? false
+global.group = process.env.GROUP ?? 'ALL'
+
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
