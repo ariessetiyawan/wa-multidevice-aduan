@@ -12,7 +12,6 @@ const getUsersetting = async (req, res) => {
 				var newdt={}
 				newdt=(idr[0])
 				let dtx=await bacaListMenu(idgas)
-                console.log('dtx',dtx)
 				if (dtx.data.rows.length>0){					
 					newdt['LISTMENU']=(dtx.data.rows)
 					for( var i = 0; i < settingall.data.rows.length; i++){ 
@@ -30,7 +29,7 @@ const getUsersetting = async (req, res) => {
 		response(res, 200, true, 'Success load User Setting.')
 		
 	} catch(e){
-		console.log('error console.log (dtx)',e.message)
+		console.log('error console.log ->',e.message)
 		response(res, 500, false, 'Failed to load User Setting.')
 	}
 }
