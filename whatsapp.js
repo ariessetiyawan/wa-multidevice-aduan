@@ -768,7 +768,7 @@ const bacaTemplate = async(idg)=>{
 }
 export {
 	kirimpesanTL,
-    bacaTemplate
+    bacaTemplate,
 	bacaListMenu,
 	bacaGroupUser,
 	bacaAllAReply,
