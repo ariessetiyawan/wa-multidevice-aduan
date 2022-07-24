@@ -12,8 +12,11 @@ const getUsersetting = async (req, res) => {
 			if (idr.length>0){
 				var newdt={}
 				newdt=(idr[0])
+				let dtxm=await bacaTemplate(idgas)
+                if (dtxm.data.rows.length>0){
+                    newdt['TEMPLATE']=(dtxm.data.rows)	
+                }
 				let dtx=await bacaListMenu(idgas)
-				//console.log('bacaListMenu',dtx)
 				if (dtx.data.rows.length>0){					
 					newdt['LISTMENU']=(dtx.data.rows)	
                     for( var i = 0; i < settingall.data.rows.length; i++){ 
