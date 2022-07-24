@@ -1,4 +1,4 @@
-import { bacaGroupUser,bacaListMenu } from '../whatsapp.js'
+import { bacaGroupUser,bacaListMenu,bacaTemplate } from '../whatsapp.js'
 import response from './../response.js'
 
 const getUsersetting = async (req, res) => {
@@ -6,15 +6,20 @@ const getUsersetting = async (req, res) => {
 		const idgas = req.body.idgas
 		const sessionid = req.body.sessionid
 		settingall=await bacaGroupUser(global.group)
+		//console.log('settingall',settingall.data.rows)
 		if (settingall.data.rows.length>0){
 			let idr =settingall.data.rows.filter(it => it.SESSION === sessionid);
 			if (idr.length>0){
 				var newdt={}
 				newdt=(idr[0])
 				let dtx=await bacaListMenu(idgas)
-                console.log('bacaListMenu',dtx)
+				//console.log('bacaListMenu',dtx)
 				if (dtx.data.rows.length>0){					
-					newdt['LISTMENU']=(dtx.data.rows)
+					newdt['LISTMENU']=(dtx.data.rows)	
+				}
+				let dtxm=await bacaTemplate(idgas)
+				if (dtxm.data.rows.length>0){					
+					newdt['TEMPLATE']=(dtxm.datam.rows)
 					for( var i = 0; i < settingall.data.rows.length; i++){ 
 						if ( settingall.data.rows[i]['SESSION'] === sessionid) { 
 							settingall.data.rows.splice(i, 1);
@@ -22,7 +27,7 @@ const getUsersetting = async (req, res) => {
 						}
 					}
 					settingall.data.rows.push(newdt)
-					//console.log('settingall',settingall.data.rows)
+					console.log('settingall',settingall.data.rows)
 				}
 			}
 		}
@@ -30,7 +35,7 @@ const getUsersetting = async (req, res) => {
 		response(res, 200, true, 'Success load User Setting.')
 		
 	} catch(e){
-		console.log('error console.log ->',e.message)
+		console.log('error console.log (dtx)',e.message)
 		response(res, 500, false, 'Failed to load User Setting.')
 	}
 }
