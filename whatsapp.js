@@ -711,7 +711,7 @@ const bacaGroupUser = async(dt)=>{
 		let payload=new URLSearchParams({"aksi":"GRP","group":dt})
 		let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
 		res = await axios.post(url,payload);
-		//console.log(res)
+		console.log('bacaGroupUser',res)
 	} catch(error){
 		var res=[]
 	}
@@ -739,6 +739,7 @@ const bacaListMenu = async(idg)=>{
 		let payload=new URLSearchParams({"aksi":"LM"})
 		let url='https://script.google.com/macros/s/'+idg+'/exec'
         console.log('url list menu',url)
+        console.log('payload',payload)
 		res = await axios.post(url,payload);
 		console.log('list menu',res)
 	} catch(error){
