@@ -16,19 +16,16 @@ const getUsersetting = async (req, res) => {
 				//console.log('bacaListMenu',dtx)
 				if (dtx.data.rows.length>0){					
 					newdt['LISTMENU']=(dtx.data.rows)	
-				}
-				let dtxm=await bacaTemplate(idgas)
-				if (dtxm.data.rows.length>0){					
-					newdt['TEMPLATE']=(dtxm.datam.rows)
-					for( var i = 0; i < settingall.data.rows.length; i++){ 
+                    for( var i = 0; i < settingall.data.rows.length; i++){ 
 						if ( settingall.data.rows[i]['SESSION'] === sessionid) { 
 							settingall.data.rows.splice(i, 1);
 							break;
 						}
 					}
 					settingall.data.rows.push(newdt)
-					console.log('settingall',settingall.data.rows)
+					//console.log('settingall',settingall.data.rows)
 				}
+				
 			}
 		}
 		
