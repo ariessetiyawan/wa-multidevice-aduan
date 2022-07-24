@@ -673,6 +673,7 @@ const bacaautoresponse = async(idg)=>{
 		let url='https://script.google.com/macros/s/'+idg+'/exec'
 		res = await axios.post(url,payload);
 	} catch(error){
+        console.log('bacaautoresponse',error.message)
 		var res=[]
 	}
 	return res
@@ -686,6 +687,7 @@ const kirimpesanTL = async()=>{
 		let url='https://script.google.com/macros/s/AKfycbz4P6jwBXqY98dwGGrT44c9Agz54h0vgE47WNYGRtGu6QkbJGck/exec'
 		res = await axios.post(url,payload);
 	} catch(error){
+        console.log('kirimpesanTL',error.message)
 		var res=[]
 	}
 	return res
@@ -699,6 +701,7 @@ const bacaAllUser = async(dt)=>{
 		res = await axios.post(url,payload);
 		//console.log(res)
 	} catch(error){
+        console.log('bacaAllUser',error.message)
 		var res=[]
 	}
 	return res
@@ -713,6 +716,7 @@ const bacaGroupUser = async(dt)=>{
 		res = await axios.post(url,payload);
 		//console.log('bacaGroupUser',res)
 	} catch(error){
+        console.log('bacaGroupUser',error.message)
 		var res=[]
 	}
 	return res
@@ -743,13 +747,28 @@ const bacaListMenu = async(idg)=>{
 		res = await axios.post(url,payload);
 		//console.log('list menu',res)
 	} catch(error){
-        console.log('list menu',error.message)
+        console.log('bacaListMenu',error.message)
+		var res=[]
+	}
+	return res
+}
+const bacaTemplate = async(idg)=>{
+	var res=[]
+	try{
+		var res=[]
+		let payload=new URLSearchParams({"aksi":"TMPL"})
+		let url='https://script.google.com/macros/s/'+idg+'/exec'
+		res = await axios.post(url,payload);
+		//console.log('list menu',res)
+	} catch(error){
+        console.log('bacaTemplate',error.message)
 		var res=[]
 	}
 	return res
 }
 export {
 	kirimpesanTL,
+    bacaTemplate
 	bacaListMenu,
 	bacaGroupUser,
 	bacaAllAReply,
