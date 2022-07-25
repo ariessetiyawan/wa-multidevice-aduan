@@ -181,7 +181,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 								//console.log('params ->',params)
 							}
 							var rta1=isiautores.filter(it => it.sessionId === sessionId);
-							console.log('isiautores ->',JSON.stringify(rta1.rows))
+							//console.log('isiautores ->',JSON.stringify(rta1.rows))
 							if (rta1.length>0){
 								
 								  if (message.message.hasOwnProperty('extendedTextMessage')){
@@ -243,7 +243,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 									  "buttonText": "Pilih Menu",  
 									  "sections":params['LISTMENU']
 									}
-							console.log('pesannya ->',pesannya)
+							//console.log('pesannya ->',pesannya)
 							const templateButtons = [
 								//{index: 1, urlButton: {displayText: '👍 IKM KUA', url: 'https://github.com/adiwajshing/Baileys'}},
 								{index: 2, quickReplyButton: {displayText: '👍 IKM KUA', id: 'id_IKM'}},
