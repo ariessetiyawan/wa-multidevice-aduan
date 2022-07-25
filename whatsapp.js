@@ -117,7 +117,7 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 							params['AUTOINFO']=''
 							var usra=settingall.data.rows.filter(it => it.SESSION === sessionId);
 							//console.log(sessionId)
-							console.log(JSON.stringify(usra[0]['LISTMENU']))
+							//console.log(JSON.stringify(usra[0]['LISTMENU']))
 							var pesannya={}
 							if (usra.length>0){
 								params['HOME']=usra[0]['HOME']
