@@ -269,8 +269,15 @@ const createSession = async (sessionId, isLegacy = false, res = null) => {
 										{index: 1, quickReplyButton: {displayText: '🔰 Menu Utama',id:"mnuhome"}}
 									]
 								pesannya['text']=rta[0]['DESKRIPSI']
-								var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
-								wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
+                                if (params['SENDTYPE']==2){
+								    var pesannya={"image":{"url":"https://drive.google.com/uc?export=view&id="+params['HEADER']},"caption":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
+                                } else  if (params['SENDTYPE']==1){
+								    var pesannya={"text":rta[0]['DESKRIPSI'],"footer":params['FOOTER'],"templateButtons":templateButtons}
+                                } else {
+								    var pesannya={"text":rta[0]['DESKRIPSI']}
+                                }
+                                
+                                wa.sendMessage(message.key.remoteJid,pesannya)//conn.sendMessage(sender, { url: link }, MessageType.document, { mimetype: Mimetype['pdf'],filename : namefile })
 							} else {						
 								//console.log('isipesan->',isipesan)
 								if (isipesan.toUpperCase()=='INFO'||isipesan.toUpperCase()=='mnuhome'||isipesan.toUpperCase()=='MENU'){
